@@ -26,6 +26,7 @@ class App extends Component {
         {passwords.length ? (
           <div>
             <h1>5 Passwords.</h1>
+            <p>Hi</p>
             <ul className="passwords">
               {/*
                 Generally it's bad to use "index" as a key.
