@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "Heath Daniel",
@@ -13,8 +13,5 @@
   "dependencies": {
     "express": "^4.17.1",
     "password-generator": "^2.3.2"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.6"
   }
 }
