@@ -1,7 +1,7 @@
 {
   "name": "rumer",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple room listing and renting app",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,9 +10,17 @@
   },
   "author": "Heath Daniel",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hedwardd/rumer.git"
+  },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "password-generator": "^2.3.2"
+    "password-generator": "^2.3.2",
+    "pg": "^8.4.2",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5"
   },
   "devDependencies": {
     "eslint": "^7.12.0",
