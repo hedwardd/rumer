@@ -12,7 +12,7 @@ module.exports = (app) => {
 		const count = 5;
 
 		// Generate some passwords
-		const passwords = Array.from(Array(count).keys()).map(i =>
+		const passwords = Array.from(Array(count).keys()).map(() =>
 			generatePassword(12, false)
 		);
 
