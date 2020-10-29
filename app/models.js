@@ -10,8 +10,8 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema(
 	{
 		name: { type: String, required: true },
-		associatedListings: [Schema.Types.ObjectId],
-		associatedBookings: [Schema.Types.ObjectId]
+		_associatedListings: [Schema.Types.ObjectId],
+		_associatedBookings: [Schema.Types.ObjectId]
 	}
 );
 const User = mongoose.model("User", userSchema);
@@ -27,7 +27,7 @@ const listingSchema = new Schema(
 			zip: { type: String, trim: true, match: /^\d{5}$/ },
 			state: { type: String, lowercase: true, trim: true, minlength: 2, maxlength: 2 },
 		},
-		description: { type: String, trim: true },
+		description: { type: String, trim: true }
 	}
 );
 const Listing = mongoose.model("Listing", listingSchema);
@@ -36,7 +36,7 @@ const bookingSchema = new Schema(
 	{
 		checkIn: Date,
 		checkOut: Date,
-		_associatedListing: Schema.Types.ObjectId,
+		_associatedListing: Schema.Types.ObjectId
 	}
 );
 const Booking = mongoose.model("Booking", bookingSchema);
