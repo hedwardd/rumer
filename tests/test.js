@@ -1,6 +1,6 @@
 const mongoDB = require("./mongoDB.js");
 const request = require("supertest");
-const app = require("../app/app.js");
+const app = require("../app/api.js");
 
 describe("Test the root path", () => {
 	test("It should test the response of the GET method", () => {

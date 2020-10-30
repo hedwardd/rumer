@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-const app = require("./app/app.js");
+const app = require("./app/api.js");
 
 const dbOptions = {
 	useNewUrlParser: true,
