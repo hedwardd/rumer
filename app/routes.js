@@ -4,22 +4,16 @@
 const express = require("express");
 const path = require("path");
 const generatePassword = require("password-generator");
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 const { Listing, User, Booking } = require("./models.js");
 
-/**
- * Declarations
- */
-const dbOptions = {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useFindAndModify: false
-};
 
 /**
  * Route Handlers
  */
 const postListing = (req, res) => {
+	console.log("postListing hit.");
+	console.log("request body: " + req.body);
 	if (!req.body.title) res.send("missing title");
 	else {
 		let title = req.body.title;
@@ -37,7 +31,7 @@ const postListing = (req, res) => {
 /**
  * Route Setter
  */
-const setRoutes = (app) => {
+module.exports = (app) => {
 
 	// Serve static files from the React app
 	app.use(express.static(path.join(__dirname, "../client/build")));
@@ -57,7 +51,7 @@ const setRoutes = (app) => {
 		console.log(`Sent ${count} passwords`);
 	});
 
-	app.route("/api/listing")
+	app.route("/api/listings")
 		.post(postListing);
 
 	// The "catchall" handler: for any request that doesn't
@@ -69,14 +63,4 @@ const setRoutes = (app) => {
 };
 
 
-module.exports = (app) => {
-
-	mongoose.connect(process.env.MONGO_URI,
-		dbOptions,
-		(err) => {
-			if (err) console.error("Database error: " + err);
-			else setRoutes(app);
-			console.log("it's alive!");
-		});
-
-};
+// module.exports = { setRoutes };
