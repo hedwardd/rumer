@@ -1,80 +1,67 @@
-require("dotenv").config();
-
-const mongoose = require("mongoose");
-const dbOptions = {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-	useFindAndModify: false
-};
-
+const mongoDB = require("./mongoDB.js");
 const request = require("supertest");
 const app = require("../app/app.js");
 
 describe("Test the root path", () => {
-	test("It should test the response of the GET method", done => {
-		request(app)
+	test("It should test the response of the GET method", () => {
+		return request(app)
 			.get("/api/passwords")
 			.then(response => {
 				expect(response.statusCode).toBe(200);
-				done();
 			});
 	});
 
-	test("It should test the response of the GET method for /api/passwords", done => {
-		request(app)
+	test("It should test the response of the GET method for /api/passwords", () => {
+		return request(app)
 			.get("/api/passwords")
 			.then(response => {
 				expect(response.statusCode).toBe(200);
-				done();
 			});
 	});
 });
 
 describe("Test the endpoints with a DB connection", () => {
-	beforeAll(done => {
-		mongoose.connect(process.env.MONGO_URI,
-			dbOptions,
-			(err) => {
-				if (err) {
-					console.error("Database error: " + err);
-				}
-				else {
-					console.log("DB connected.");
-				}
-				done();
-			});
+
+	beforeAll(() => {
+		mongoDB.connect();
 	});
 	
-	afterAll((done) => {
-		
-		mongoose.disconnect(process.env.MONGO_URI,
-			dbOptions,
-			(err) => {
-				if (err) {
-					console.error("Database disconnection error: " + err);
-					done();
-				}
-				else {
-					console.log("DB disconnected.");
-					done();
-				}
-			});
-		
+	// eslint-disable-next-line jest/no-done-callback
+	afterAll(done => {
+		mongoDB.disconnect(done);
 	});
 
-	test("It should response the POST method for /api/listings", done => {
-		request(app)
-			.post("/api/listings")
-			.send({title: "example title"})
-			.then(response => {
-				console.log(response.body);
-				expect(response.statusCode).toBe(200);
-				// console.log(response.body);
-				done();
-			});
+	describe("POST /api/listings with title => create listing object/expect listing object", () => {
+		test("POST /api/listings with no title", () => {
+			return request(app)
+				.post("/api/listings")
+				.send({})
+				.then(response => {
+					expect(response.statusCode).toBe(200);
+					expect(response.text).toBe("missing title");
+				});
+		});
+
+		test("POST /api/listings with title", () => {
+			return request(app)
+				.post("/api/listings")
+				.send({title: "example title"})
+				.then(response => {
+					expect(response.statusCode).toBe(200);
+				});
+		});
 	});
 
+	describe("GET /api/listings with title => get listing objects/expect listing objects", () => {
+		test("GET /api/listings", () => {
+			return request(app)
+				.get("/api/listings")
+				.then(response => {
+					expect(response.statusCode).toBe(200);
+					expect(typeof(response.body[0].title)).toBe("string");
+					expect(response.body[0]).toHaveProperty("photoURLs");
+				});
+		});
+	});
 
-
-	
 });

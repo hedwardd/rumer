@@ -12,8 +12,6 @@ const { Listing, User, Booking } = require("./models.js");
  * Route Handlers
  */
 const postListing = (req, res) => {
-	console.log("postListing hit.");
-	console.log("request body: " + req.body);
 	if (!req.body.title) res.send("missing title");
 	else {
 		let title = req.body.title;
@@ -25,6 +23,15 @@ const postListing = (req, res) => {
 			} else res.json(savedListing);
 		});
 	}
+};
+
+const getListings = (req, res) => {
+	Listing.find({}, "-__v -_id", (err, foundListings) => {
+		if (err) {
+			console.error(err);
+			res.send("Could not GET listings");
+		} else res.json(foundListings);
+	});
 };
 
 
@@ -52,6 +59,7 @@ module.exports = (app) => {
 	});
 
 	app.route("/api/listings")
+		.get(getListings)
 		.post(postListing);
 
 	// The "catchall" handler: for any request that doesn't
