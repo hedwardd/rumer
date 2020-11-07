@@ -3,7 +3,6 @@
  */
 const express = require("express");
 const path = require("path");
-const generatePassword = require("password-generator");
 const { User, Listing, Booking } = require("./models.js");
 const bodyParser = require("body-parser");
 
@@ -95,7 +94,6 @@ const postBooking = (req, res) => {
 
 // TO-DO: Finish and write tests for this endpoint
 const getBookingsByListing = (req, res) => {
-	console.log("getBookingsByListing handler initiated");
 	let _associatedListing = req.params.listingId;
 	if (!_associatedListing) {
 		res.send("Error: Missing listingId");
@@ -121,17 +119,6 @@ const getBookingsByListing = (req, res) => {
 app.use(express.static(path.join(__dirname, "../client/build")));
 
 // Put all API endpoints under '/api'
-app.get("/api/passwords", (req, res) => {
-	const count = 5;
-	// Generate some passwords
-	const passwords = Array.from(Array(count).keys()).map(() =>
-		generatePassword(12, false)
-	);
-	// Return them as json
-	res.json(passwords);
-	console.log(`Sent ${count} passwords`);
-});
-
 app.route("/api/listings")
 	.get(getListings)
 	.post(postListing);

@@ -157,7 +157,6 @@ describe("Test the endpoints with a DB connection", () => {
 				.get("/api/bookings/" + listingId)
 				.then(response => {
 					expect(response.statusCode).toBe(200);
-					console.log(response.body);
 					expect(response.body[0]).toHaveProperty("_associatedListing");
 					expect(response.body[0]).toHaveProperty("checkIn");
 					expect(response.body[0]).toHaveProperty("checkOut");

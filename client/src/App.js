@@ -7,7 +7,8 @@ import {
   useRouteMatch,
   useParams
 } from "react-router-dom";
-import PasswordDisplayer from "./components/passwordDisplayer.js";
+import ListingForm from "./components/ListingForm.js";
+import ListingBrowser from "./components/ListingBrowser.js";
 
 export default function App() {
   return (
@@ -24,7 +25,10 @@ export default function App() {
             <Link to="/topics">Topics</Link>
           </li>
           <li>
-              <Link to="/passwords">Passwords</Link>
+            <Link to="/browse">Browse</Link>
+          </li>
+          <li>
+            <Link to="/addListing">Add Listing</Link>
           </li>
         </ul>
 
@@ -35,8 +39,11 @@ export default function App() {
           <Route path="/topics">
             <Topics />
           </Route>
-          <Route path="/passwords">
-              <PasswordDisplayer />
+          <Route path="/browse">
+            <ListingBrowser />
+          </Route>
+          <Route path="/addListing">
+              <ListingForm />
           </Route>
           <Route path="/">
             <Home />
