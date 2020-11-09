@@ -19,23 +19,17 @@ export default function App() {
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/topics">Topics</Link>
-          </li>
-          <li>
             <Link to="/browse">Browse</Link>
           </li>
           <li>
             <Link to="/addListing">Add Listing</Link>
           </li>
+          <li>
+            <Link to="/topics">Topics</Link>
+          </li>
         </ul>
 
         <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
           <Route path="/topics">
             <Topics />
           </Route>
@@ -43,10 +37,10 @@ export default function App() {
             <ListingBrowser />
           </Route>
           <Route path="/addListing">
-              <ListingForm />
+            <ListingForm />
           </Route>
           <Route path="/">
-            <Home />
+            <ListingBrowser />
           </Route>
         </Switch>
       </div>
@@ -54,13 +48,9 @@ export default function App() {
   );
 }
 
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function About() {
-  return <h2>About</h2>;
-}
+// function Home() {
+//   return <h2>Home</h2>;
+// }
 
 function Topics() {
   let match = useRouteMatch();

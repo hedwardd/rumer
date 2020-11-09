@@ -1,4 +1,12 @@
 import React, { Component } from 'react';
+import {
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  useParams
+} from "react-router-dom";
+// import ListingFullView from "./components/ListingFullView.js";
 
 class ListingBrowser extends Component {
   // Initialize state
@@ -17,6 +25,7 @@ class ListingBrowser extends Component {
   }
 
   render() {
+    // let match = useRouteMatch();
     const { listings } = this.state;
 
     return (
@@ -28,7 +37,9 @@ class ListingBrowser extends Component {
             <ul className="listings">
               {listings.map((listing, index) =>
                 <li key={index}>
-                  {listing.title}
+                  {/* <Link to={`${match.url}/${listing.id}`}> */}
+                    {listing.title}
+                    {/* </Link> */}
                 </li>
               )}
             </ul>
@@ -37,11 +48,20 @@ class ListingBrowser extends Component {
               onClick={this.getListings}>
               Again
             </button>
+
+            {/* <Switch>
+              <Route path={`${match.path}/:listingId`}>
+                <ListingFullView />
+              </Route>
+              <Route path={match.path}>
+                <h3>Please select a Listing.</h3>
+              </Route>
+            </Switch> */}
           </div>
         ) : (
           // Render a helpful message otherwise
           <div>
-            <h1>No listings :(</h1>
+            <h1>No listings</h1>
             <button
               className="again"
               onClick={this.getListings}>
