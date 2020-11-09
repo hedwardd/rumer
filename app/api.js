@@ -30,11 +30,21 @@ const postListing = (req, res) => {
 };
 
 const getListings = (req, res) => {
-	Listing.find({}, "-__v -_id", (err, foundListings) => {
+	Listing.find({}, "-__v", (err, foundListings) => {
 		if (err) {
 			console.error(err);
 			res.send("Could not GET listings");
 		} else res.json(foundListings);
+	});
+};
+
+const getListingById = (req, res) => {
+	let listingId = req.params.listingId;
+	Listing.findOne({ _id: listingId }, "-__v", (err, foundListing) => {
+		if (err) {
+			console.error(err);
+			res.send("Error finding listing with that ID");
+		} else res.json(foundListing);
 	});
 };
 
@@ -122,6 +132,9 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 app.route("/api/listings")
 	.get(getListings)
 	.post(postListing);
+
+app.route("/api/listings/:listingId")
+	.get(getListingById);
 
 
 app.route("/api/bookings/:listingId")
