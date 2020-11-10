@@ -5,7 +5,7 @@ import {
   Link
 } from "react-router-dom";
 import { withRouter } from "react-router";
-import ListingWithRouter from "./Listing.js";
+import ListingWithRouter from "./Listing.jsx";
 
 class ListingBrowser extends Component {
   // Initialize state

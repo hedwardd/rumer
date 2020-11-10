@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
-import BookingForm from "./BookingForm.js";
+import BookingForm from "./BookingForm.jsx";
 
 class Listing extends Component {
   

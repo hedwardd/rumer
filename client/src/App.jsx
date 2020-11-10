@@ -6,8 +6,8 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import ListingForm from "./components/ListingForm.js";
-import ListingBrowserWithRouter from "./components/ListingBrowser.js";
+import ListingForm from "./components/ListingForm.jsx";
+import ListingBrowserWithRouter from "./components/ListingBrowser.jsx";
 
 export default function App() {
   return (
