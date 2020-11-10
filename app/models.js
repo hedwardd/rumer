@@ -25,7 +25,7 @@ const listingSchema = new Schema(
 			street2: { type: String, lowercase: true, trim: true },
 			city: { type: String, lowercase: true, trim: true },
 			zip: { type: String, trim: true, match: /^\d{5}$/ },
-			state: { type: String, lowercase: true, trim: true, minlength: 2, maxlength: 2 },
+			state: { type: String, lowercase: true, trim: true}// , minlength: 2, maxlength: 2 },
 		},
 		description: { type: String, trim: true }
 	}

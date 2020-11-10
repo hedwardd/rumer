@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 /**
  * Route Handlers
  */
+// TO-DO: Add server-side validation to form values
 const postListing = (req, res) => {
 	if (!req.body.title) res.send("missing title");
 	else {
