@@ -6,7 +6,8 @@ import {
   useRouteMatch,
   useParams
 } from "react-router-dom";
-// import ListingFullView from "./components/ListingFullView.js";
+import { withRouter } from "react-router";
+import ListingWithRouter from "./Listing.js";
 
 class ListingBrowser extends Component {
   // Initialize state
@@ -27,51 +28,53 @@ class ListingBrowser extends Component {
   render() {
     // let match = useRouteMatch();
     const { listings } = this.state;
+    const { match } = this.props;
 
     return (
       <div className="listingBrowser">
-        {/* Render the listings if we have them */}
-        {listings.length ? (
-          <div>
-            <h1>Listings</h1>
-            <ul className="listings">
-              {listings.map((listing, index) =>
-                <li key={index}>
-                  {/* <Link to={`${match.url}/${listing.id}`}> */}
-                    {listing.title}
-                    {/* </Link> */}
-                </li>
+        <Switch>
+          <Route path={`${match.path}/:listingId`}>
+            <ListingWithRouter />
+          </Route>
+          <Route path={match.path}>
+            {/* Render the listings if we have them */}
+            {listings.length ? (
+              <div>
+                  
+                  <h1>Listings</h1>
+                  <ul className="listings">
+                    {listings.map((listing, index) =>
+                      <li key={index}>
+                        <Link to={`/browse/${listing._id}`}>
+                          {listing.title}
+                        </Link>
+                      </li>
+                    )}
+                  </ul>
+                  <button
+                    className="again"
+                    onClick={this.getListings}>
+                    Again
+                  </button>
+                </div>
+              ) : (
+                // Render a helpful message otherwise
+                <div>
+                  <h1>No listings</h1>
+                  <button
+                    className="again"
+                    onClick={this.getListings}>
+                    Try Again?
+                  </button>
+                </div>
               )}
-            </ul>
-            <button
-              className="again"
-              onClick={this.getListings}>
-              Again
-            </button>
-
-            {/* <Switch>
-              <Route path={`${match.path}/:listingId`}>
-                <ListingFullView />
-              </Route>
-              <Route path={match.path}>
-                <h3>Please select a Listing.</h3>
-              </Route>
-            </Switch> */}
-          </div>
-        ) : (
-          // Render a helpful message otherwise
-          <div>
-            <h1>No listings</h1>
-            <button
-              className="again"
-              onClick={this.getListings}>
-              Try Again?
-            </button>
-          </div>
-        )}
+          </Route>
+        </Switch>
       </div>
     );
   }
 }
 
-export default ListingBrowser;
+const ListingBrowserWithRouter = withRouter(ListingBrowser);
+
+export default ListingBrowserWithRouter;
