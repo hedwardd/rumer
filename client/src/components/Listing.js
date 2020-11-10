@@ -5,7 +5,7 @@ import BookingForm from "./BookingForm.js";
 class Listing extends Component {
   
   // Initialize state
-  state = { listing: {} }
+  state = {}
 
   // Fetch listing info after first mount
   componentDidMount() {
@@ -17,16 +17,27 @@ class Listing extends Component {
     // Get the listings and store them in state
     fetch(`/api/listings/${listingId}`)
       .then(res => res.json())
-      .then(listing => this.setState({listing}));
+      .then(listing => this.setState({...listing}));
   }
 
   render() {
 
+    let images = null;
+    if (this.state.photoURLs) {
+      images = this.state.photoURLs.map(url => (
+        <img src={url} alt="A look at the listing."></img>
+      ))
+    }
+
+    console.log(this.state);
+
     return (
       <div className="listing-view">
-          <h1>{this.state.listing.title}</h1>
-          <p>{this.state.listing.description}</p>
-          <BookingForm listingId={this.state.listing._id} />
+          <h1>{this.state.title}</h1>
+          <p>{this.state.description}</p>
+          {images}
+
+          <BookingForm listingId={this.state._id} />
       </div>
     );
   }
