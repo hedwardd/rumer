@@ -5,15 +5,7 @@ const app = require("../app/api.js");
 describe("Test the root path", () => {
 	test("It should test the response of the GET method", () => {
 		return request(app)
-			.get("/api/passwords")
-			.then(response => {
-				expect(response.statusCode).toBe(200);
-			});
-	});
-
-	test("It should test the response of the GET method for /api/passwords", () => {
-		return request(app)
-			.get("/api/passwords")
+			.get("/")
 			.then(response => {
 				expect(response.statusCode).toBe(200);
 			});
@@ -135,6 +127,7 @@ describe("Test the endpoints with a DB connection", () => {
 		// 		});
 		// });
 
+		// TO-DO: Make sure this gets a real `_associatedListing` before testing
 		test("POST /api/booking with associated listing, checkin, and checkout dates", () => {
 			let bookingObject = {
 				checkIn: new Date(),
