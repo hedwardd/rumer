@@ -54,7 +54,7 @@ class ListingBrowser extends Component {
                   <button
                     className="again"
                     onClick={this.getListings}>
-                    Again
+                    Refresh
                   </button>
                 </div>
               ) : (

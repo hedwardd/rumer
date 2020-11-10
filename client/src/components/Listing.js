@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router";
+import BookingForm from "./BookingForm.js";
 
 class Listing extends Component {
   
@@ -25,6 +26,7 @@ class Listing extends Component {
       <div className="listing-view">
           <h1>{this.state.listing.title}</h1>
           <p>{this.state.listing.description}</p>
+          <BookingForm listingId={this.state.listing._id} />
       </div>
     );
   }
