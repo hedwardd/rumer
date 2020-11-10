@@ -18,8 +18,18 @@ app.use(bodyParser.json());
 const postListing = (req, res) => {
 	if (!req.body.title) res.send("missing title");
 	else {
-		let title = req.body.title;
-		let newListing = new Listing({ title: title });
+		let { title, street1, street2, city, zip, state, description } = req.body;
+		let newListing = new Listing({ 
+			title,
+			address: {
+				street1,
+				street2,
+				city,
+				zip,
+				state
+			},
+			description 
+		});
 		newListing.save((err, savedListing) => {
 			if (err) {
 				console.error(err);
