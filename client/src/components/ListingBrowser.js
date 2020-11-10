@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import {
   Switch,
   Route,
-  Link,
-  useRouteMatch,
-  useParams
+  Link
 } from "react-router-dom";
 import { withRouter } from "react-router";
 import ListingWithRouter from "./Listing.js";

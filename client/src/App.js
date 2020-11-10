@@ -1,11 +1,10 @@
 import React from "react";
+import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useRouteMatch,
-  useParams
+  Link
 } from "react-router-dom";
 import ListingForm from "./components/ListingForm.js";
 import ListingBrowserWithRouter from "./components/ListingBrowser.js";

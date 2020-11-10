@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactFilestack from 'filestack-react';
 
 class ListingForm extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class ListingForm extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleFileUpload = this.handleFileUpload.bind(this);
   }
 
   handleSubmit = async event => {
@@ -35,6 +37,7 @@ class ListingForm extends Component {
     });
     this.setState({ isSubmitting: false });
     const data = await res.json();
+    console.log(res.json)
     !data.hasOwnProperty("error")
       ? this.setState({ message: data.success })
       : this.setState({ message: data.error, isError: true });
@@ -42,6 +45,7 @@ class ListingForm extends Component {
     setTimeout(
       () =>
         this.setState({
+          isSubmitting: false,
           isError: false,
           message: "",
           values: { 
@@ -71,10 +75,27 @@ class ListingForm extends Component {
     });
   }
 
+  handleFileUpload = res => {
+    console.log("handleFileUpload triggered.");
+    console.log(res);
+    if (res.filesUploaded.length) {
+      let photoURLs = res.filesUploaded.map(file => file.url);
+      this.setState({ 
+        values: {
+          ...this.state.values,
+          photoURLs
+        }
+      });
+    } else {
+      console.log("There was an error.");
+      console.log(res);
+    }
+  }
+
   render() {
     return (
       <div>
-        <form onSubmit={this.handleSubmit} className="form">
+        <form onSubmit={this.handleSubmit} className="listing-form">
          <label>
            Title:
            <input
@@ -87,7 +108,6 @@ class ListingForm extends Component {
             onChange={this.handleChange}
           />
         </label>
-        {/* TO-DO: Implement Photo Uploader */}
         <label>
           Address line 1:
           <input
@@ -163,6 +183,19 @@ class ListingForm extends Component {
             onChange={this.handleChange}
           />
         </label>
+        <div id="embedded" >
+          <ReactFilestack        
+            apikey="AndaLCkprQkKsCBl3aG2rz"
+            // componentDisplayMode={{
+            //   type: 'immediate'
+            // }}
+            // actionOptions={{
+            //   displayMode: "inline",
+            //   container: "embedded"
+            // }}
+            onSuccess={this.handleFileUpload}
+            />
+        </div>
         <input type="submit" value="Submit" />
       </form>
         <div className={`message ${this.state.isError && "error"}`}>

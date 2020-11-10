@@ -18,9 +18,10 @@ app.use(bodyParser.json());
 const postListing = (req, res) => {
 	if (!req.body.title) res.send("missing title");
 	else {
-		let { title, street1, street2, city, zip, state, description } = req.body;
+		let { title, street1, street2, city, zip, state, description, photoURLs } = req.body;
 		let newListing = new Listing({ 
 			title,
+			photoURLs,
 			address: {
 				street1,
 				street2,
