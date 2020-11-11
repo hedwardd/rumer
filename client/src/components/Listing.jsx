@@ -43,6 +43,4 @@ class Listing extends Component {
   }
 }
 
-const ListingWithRouter = withRouter(Listing);
-
-export default ListingWithRouter;
+export default withRouter(Listing);

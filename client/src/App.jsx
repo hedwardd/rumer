@@ -7,7 +7,7 @@ import {
   Link
 } from "react-router-dom";
 import ListingForm from "./components/ListingForm";
-import ListingBrowserWithRouter from "./components/ListingBrowser";
+import ListingBrowser from "./components/ListingBrowser";
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 
@@ -30,7 +30,7 @@ function App() {
         <Switch>
           <Route path="/login" component={LoginForm} />
           <Route path="/signup" component={SignupForm} />
-          <Route path="/browse" component={ListingBrowserWithRouter} />
+          <Route path="/browse" component={ListingBrowser} />
           <Route path="/addListing" component={ListingForm} />
           <Route path="/">
           </Route>

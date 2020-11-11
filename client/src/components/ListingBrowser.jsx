@@ -5,7 +5,7 @@ import {
   Link
 } from "react-router-dom";
 import { withRouter } from "react-router";
-import ListingWithRouter from "./Listing.jsx";
+import Listing from "./Listing.jsx";
 
 class ListingBrowser extends Component {
   // Initialize state
@@ -32,7 +32,7 @@ class ListingBrowser extends Component {
       <div className="listingBrowser">
         <Switch>
           <Route path={`${match.path}/:listingId`}>
-            <ListingWithRouter />
+            <Listing />
           </Route>
           <Route path={match.path}>
             {/* Render the listings if we have them */}
@@ -73,6 +73,4 @@ class ListingBrowser extends Component {
   }
 }
 
-const ListingBrowserWithRouter = withRouter(ListingBrowser);
-
-export default ListingBrowserWithRouter;
+export default withRouter(ListingBrowser);
