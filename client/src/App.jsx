@@ -6,10 +6,12 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import ListingForm from "./components/ListingForm.jsx";
-import ListingBrowserWithRouter from "./components/ListingBrowser.jsx";
+import ListingForm from "./components/ListingForm";
+import ListingBrowserWithRouter from "./components/ListingBrowser";
+import LoginForm from "./components/LoginForm";
+import SignupForm from "./components/SignupForm";
 
-export default function App() {
+function App() {
   return (
     <Router>
       <div>
@@ -26,12 +28,10 @@ export default function App() {
         </ul>
 
         <Switch>
-          <Route path="/browse">
-            <ListingBrowserWithRouter />
-          </Route>
-          <Route path="/addListing">
-            <ListingForm />
-          </Route>
+          <Route path="/login" component={LoginForm} />
+          <Route path="/signup" component={SignupForm} />
+          <Route path="/browse" component={ListingBrowserWithRouter} />
+          <Route path="/addListing" component={ListingForm} />
           <Route path="/">
           </Route>
         </Switch>
@@ -78,3 +78,5 @@ export default function App() {
 //   let { topicId } = useParams();
 //   return <h3>Requested topic ID: {topicId}</h3>;
 // }
+
+export default App;
