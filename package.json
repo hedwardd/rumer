@@ -1,17 +1,32 @@
 {
   "name": "rumer",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A simple room listing and renting app",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "test": "npx jest",
+    "start": "nodemon server.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "Heath Daniel",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hedwardd/rumer.git"
+  },
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mongoose": "^5.10.11",
     "password-generator": "^2.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.12.0",
+    "eslint-plugin-jest": "^24.1.0",
+    "eslint-plugin-react": "^7.21.5",
+    "jest": "^26.6.0",
+    "nodemon": "^2.0.6",
+    "supertest": "^6.0.0"
   }
 }
