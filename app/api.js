@@ -2,19 +2,133 @@
  * Libraries
  */
 const express = require("express");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
 const path = require("path");
 const { User, Listing, Booking } = require("./models.js");
 const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
 
 /**
  * Declarations
  */
 const app = express();
+app.use(session({
+	secret: process.env.SESSION_SECRET,
+	resave: true,
+	saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(bodyParser.json());
+
+passport.serializeUser((user, done) => {
+	done(null, user._id);
+});
+passport.deserializeUser((_id, done) => {
+	done(null, null);
+	User.findOne(
+		{_id: _id},
+		(err, foundUser) => {
+			done(null, foundUser);
+		}
+	);
+});
+
+passport.use(
+	new LocalStrategy((username, password, done) => {
+		User.findOne({ username: username },
+			async (err, user) => {
+				console.log("User " + username + " attempted to log in.");
+				if (err) {
+					console.error(err);
+					return done(err);
+				}
+				if (!user) {
+					console.log("No such user found.");
+					return done(null, false);
+				}
+				if (!await bcrypt.compare(password, user.password)) { // Original: if(password !== user.password) {
+					console.log("Password is incorrect.");
+					return done(null, false);
+				}
+				console.log("User has been authenticated.");
+				return done(null, user);
+			}
+		);
+	})
+);
 
 /**
  * Route Handlers
  */
+// const logInUser = (req, res) => {
+// 	// Checks if the user exists
+// 	User.findOne(
+// 		{ userName: req.body.userName },
+// 		async (err, foundUser) => {
+// 			if (err) {
+// 				console.error(err);
+// 				res.send("Error finding user.");
+// 			} else {
+// 				// Checks if the user exists
+// 				if (!foundUser) res.send("No user with that Username found.");
+// 				else {
+// 					// If the user exists and the password is accurate
+// 					if (await bcrypt.compare(req.body.password, foundUser.password)) {
+// 						// A cookie value is generated using a secret keyword
+// 						let cookieValue = bcrypt.hash(process.env.SESSION_SECRET,10);
+// 						const newUserSession = new UserSession({
+// 							_associatedUser: foundUser._id,
+// 							session: cookieValue
+// 						});
+// 						newUserSession.save((err) => {
+// 							if (err) {
+// 								console.error(err);
+// 								res.send("Error saving the user session.");
+// 							} else 
+// 								res.cookie("RumerUserSession").send(foundUser._id);
+// 						});
+// 					} 
+// 					// If the user exists but the password is incorrect
+// 					else
+// 						res.send("Password incorrect");
+// 				}
+// 			}
+// 		}
+// 	);
+// };
+
+const registerNewUser = async (req, res) => {
+	User.findOne({ username: req.body.username }, async (err, foundUser) => {
+		if (err) {
+			console.error(err);
+			res.send("There was an error checking for existing users.");
+		}
+		else if (foundUser) {
+			console.log("Existing user found.");
+			res.send("There is already a user with that username.");
+		}
+		else {
+			const hashedPassword = await bcrypt.hash(req.body.password, 10);
+			const newUser = new User({
+				username: req.body.username,
+				password: hashedPassword
+			});
+			newUser.save((err, savedUser) => {
+				if (err) {
+					console.error(err);
+					res.send("Error saving new user.");
+				} else {
+					console.log("Successfully created new user: " + savedUser.username);
+					res.send("Registered successfully!");
+				}
+			});
+		}
+	});
+};
+
 // TO-DO: Add server-side validation to form values
 const postListing = (req, res) => {
 	if (!req.body.title) res.send("missing title");
@@ -133,6 +247,14 @@ const getBookingsByListing = (req, res) => {
 	}
 };
 
+let ensureAuthenticated = (req, res, next) => {
+	if (req.isAuthenticated()) {
+		return next();
+	} else {
+		console.log("Authentication failed.");
+		res.send("Authentication failed.");
+	}
+};
 
 /**
  * Routes
@@ -141,9 +263,24 @@ const getBookingsByListing = (req, res) => {
 app.use(express.static(path.join(__dirname, "../client/build")));
 
 // Put all API endpoints under '/api'
+app.route("/api/login")
+	.post(passport.authenticate("local"), (req, res) => {
+		res.json({success: "Welcome back!"});
+	});
+
+app.route("/api/logout")
+	.get((req, res) => {
+		req.logout();
+		res.send("Logout successful.");
+	});
+
+app.route("/api/user")
+	// .get(logInUser)
+	.post(registerNewUser);
+	
 app.route("/api/listings")
 	.get(getListings)
-	.post(postListing);
+	.post(ensureAuthenticated, postListing);
 
 app.route("/api/listings/:listingId")
 	.get(getListingById);

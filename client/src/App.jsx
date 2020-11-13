@@ -25,6 +25,9 @@ function App() {
           <li>
             <Link to="/addListing">Add Listing</Link>
           </li>
+          <li>
+            <Link to="/login">Log in</Link>
+          </li>
         </ul>
 
         <Switch>

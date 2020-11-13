@@ -5,10 +5,8 @@ class LoginForm extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        values: {
-          username: "",
-          password: ""
-        },
+        username: "",
+        password: "",
         isSubmitting: false,
         isError: false
       };
@@ -22,25 +20,23 @@ class LoginForm extends Component {
         const name = event.target.name;
     
         this.setState({
-          values: { 
-            ...this.state.values, 
+            ...this.state, 
             [name]: value
-           }
         });
-      }
+    }
     
     handleSubmit = async event => {
         event.preventDefault();
         this.setState({ isSubmitting: true });
 
-        const bookingObject = { 
-            ...this.state.values,
-            _associatedListing: this.props.listingId 
+        const userObject = { 
+            username: this.state.username,
+            password: this.state.password
         };
 
-        const res = await fetch("/api/bookings", { 
+        const res = await fetch("/api/login", { 
             method: "POST",
-            body: JSON.stringify(bookingObject),
+            body: JSON.stringify(userObject),
             headers: { "Content-Type": "application/json" } 
         });
         this.setState({ isSubmitting: false });
@@ -48,16 +44,14 @@ class LoginForm extends Component {
         !data.hasOwnProperty("error")
             ? this.setState({ message: data.success })
             : this.setState({ message: data.error, isError: true });
-        setTimeout(() => this.setState({ 
-            isError: false,
-            message: "",
-            values: { 
-                checkIn: "",
-                checkOut: "" 
-            } 
+        setTimeout(() => this.setState(
+            {
+                username: "",
+                password: "",
+                isSubmitting: false,
+                isError: false
             }),
-        1600
-        );
+            1600);
     };
 
     render() {
@@ -73,7 +67,7 @@ class LoginForm extends Component {
                     id="username"
                     name="username"
                     onChange={this.handleChange}
-                    value={this.state.values.username}
+                    value={this.state.username}
                     />
                 </label>
 
@@ -84,6 +78,7 @@ class LoginForm extends Component {
                     type="password"
                     name="password"
                     onChange={this.handleChange}
+                    value={this.state.password}
                     />
                 </label>
 

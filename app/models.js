@@ -9,12 +9,21 @@ const Schema = mongoose.Schema;
  */
 const userSchema = new Schema(
 	{
-		name: { type: String, required: true },
+		username: { type: String, required: true },
+		password: { type: String },
 		_associatedListings: [Schema.Types.ObjectId],
 		_associatedBookings: [Schema.Types.ObjectId]
 	}
 );
 const User = mongoose.model("User", userSchema);
+
+const userSessionSchema = new Schema(
+	{
+		_associatedUser: Schema.Types.ObjectId,
+		session: { type: String }
+	}
+);
+const UserSession = mongoose.model("UserSession", userSessionSchema);
 
 const listingSchema = new Schema(
 	{
@@ -42,4 +51,4 @@ const bookingSchema = new Schema(
 const Booking = mongoose.model("Booking", bookingSchema);
 
 
-module.exports = { Listing, User, Booking };
+module.exports = { User, UserSession, Listing, Booking };

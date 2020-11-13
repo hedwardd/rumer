@@ -32,7 +32,8 @@ class ListingForm extends Component {
       method: "POST",
       body: JSON.stringify(this.state.values),
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true
       }
     });
     this.setState({ isSubmitting: false });

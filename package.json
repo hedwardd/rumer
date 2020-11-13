@@ -15,10 +15,14 @@
     "url": "git://github.com/hedwardd/rumer.git"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "mongoose": "^5.10.11",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "password-generator": "^2.3.2"
   },
   "devDependencies": {
