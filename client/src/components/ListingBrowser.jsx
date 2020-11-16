@@ -18,7 +18,14 @@ class ListingBrowser extends Component {
 
   getListings = () => {
     // Get the listings and store them in state
-    fetch('/api/listings')
+    fetch('/api/listings', {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true
+      }
+    })
       .then(res => res.json())
       .then(listings => this.setState({ listings }));
   }

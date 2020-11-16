@@ -41,16 +41,14 @@ class SignupForm extends Component {
         });
         this.setState({ isSubmitting: false });
         const data = await res.json();
-        !data.hasOwnProperty("error")
-            ? this.setState({ message: data.success })
-            : this.setState({ message: data.error, isError: true });
+        data.hasOwnProperty("error")
+            ? this.setState({ message: data.error, isError: true })
+            : this.setState({ message: data.success });
         setTimeout(() => this.setState({ 
             isError: false,
             message: "",
-            values: { 
-                username: "",
-                password: ""
-            } 
+            username: "",
+            password: "",
             }),
         1600
         );
@@ -60,37 +58,41 @@ class SignupForm extends Component {
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                <h2>Login</h2>
+                    <h2>Sign Up</h2>
 
-                <label>
-                    Username
+                    <label>
+                        Username
+                        <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        onChange={this.handleChange}
+                        value={this.state.username}
+                        />
+                    </label>
+
+                    <label>
+                        Password
+                        <input
+                        type="password"
+                        name="password"
+                        onChange={this.handleChange}
+                        value={this.state.password}
+                        />
+                    </label>
+
                     <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    onChange={this.handleChange}
-                    value={this.state.username}
+                        type="submit"
+                        value="Submit"
                     />
-                </label>
 
-                <label>
-                    Password
-                    <input
-                    floatingLabelText="Password"
-                    type="password"
-                    name="password"
-                    onChange={this.handleChange}
-                    value={this.state.password}
-                    />
-                </label>
+                </form>
 
-                <input
-                    type="submit"
-                    value="Submit"
-                />
+                <div>
+                    {this.state.isSubmitting ? "Submitting..." : this.state.message}
+                </div>
 
                 <p>Already have an account? <Link to={'/login'}>Log in</Link>.</p>
-                </form>
             </div>
         )
     }

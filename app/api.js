@@ -2,6 +2,7 @@
  * Libraries
  */
 const express = require("express");
+const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -13,32 +14,10 @@ const bcrypt = require("bcrypt");
 /**
  * Declarations
  */
-const app = express();
-app.use(session({
-	secret: process.env.SESSION_SECRET,
-	resave: true,
-	saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(bodyParser.json());
-
-passport.serializeUser((user, done) => {
-	done(null, user._id);
-});
-passport.deserializeUser((_id, done) => {
-	done(null, null);
-	User.findOne(
-		{_id: _id},
-		(err, foundUser) => {
-			done(null, foundUser);
-		}
-	);
-});
-
 passport.use(
 	new LocalStrategy((username, password, done) => {
-		User.findOne({ username: username },
+		User.findOne(
+			{ username: username },
 			async (err, user) => {
 				console.log("User " + username + " attempted to log in.");
 				if (err) {
@@ -60,45 +39,38 @@ passport.use(
 	})
 );
 
+passport.serializeUser((user, done) => {
+	done(null, user._id);
+});
+
+passport.deserializeUser((id, done) => {
+	User.findOne(
+		{_id: id},
+		"-password",
+		(err, foundUser) => {
+			done(null, foundUser);
+		}
+	);
+});
+
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use(session({
+	secret: process.env.SESSION_SECRET,
+	resave: true,
+	saveUninitialized: true
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 /**
  * Route Handlers
  */
-// const logInUser = (req, res) => {
-// 	// Checks if the user exists
-// 	User.findOne(
-// 		{ userName: req.body.userName },
-// 		async (err, foundUser) => {
-// 			if (err) {
-// 				console.error(err);
-// 				res.send("Error finding user.");
-// 			} else {
-// 				// Checks if the user exists
-// 				if (!foundUser) res.send("No user with that Username found.");
-// 				else {
-// 					// If the user exists and the password is accurate
-// 					if (await bcrypt.compare(req.body.password, foundUser.password)) {
-// 						// A cookie value is generated using a secret keyword
-// 						let cookieValue = bcrypt.hash(process.env.SESSION_SECRET,10);
-// 						const newUserSession = new UserSession({
-// 							_associatedUser: foundUser._id,
-// 							session: cookieValue
-// 						});
-// 						newUserSession.save((err) => {
-// 							if (err) {
-// 								console.error(err);
-// 								res.send("Error saving the user session.");
-// 							} else 
-// 								res.cookie("RumerUserSession").send(foundUser._id);
-// 						});
-// 					} 
-// 					// If the user exists but the password is incorrect
-// 					else
-// 						res.send("Password incorrect");
-// 				}
-// 			}
-// 		}
-// 	);
-// };
+
 
 const registerNewUser = async (req, res) => {
 	User.findOne({ username: req.body.username }, async (err, foundUser) => {
@@ -122,7 +94,7 @@ const registerNewUser = async (req, res) => {
 					res.send("Error saving new user.");
 				} else {
 					console.log("Successfully created new user: " + savedUser.username);
-					res.send("Registered successfully!");
+					res.json({ success: "Registered successfully!" });
 				}
 			});
 		}
@@ -268,10 +240,24 @@ app.route("/api/login")
 		res.json({success: "Welcome back!"});
 	});
 
+app.route("/api/auth")
+	.get(ensureAuthenticated, (req, res) => {
+		if (req.user) {
+			res.json({
+				success: true,
+				message: "user has successfully authenticated",
+				user: req.user,
+				cookies: req.cookies
+			});
+		}
+	});
+
+	
+
 app.route("/api/logout")
 	.get((req, res) => {
 		req.logout();
-		res.send("Logout successful.");
+		res.redirect("/");
 	});
 
 app.route("/api/user")
@@ -279,7 +265,7 @@ app.route("/api/user")
 	.post(registerNewUser);
 	
 app.route("/api/listings")
-	.get(getListings)
+	.get(ensureAuthenticated, getListings)
 	.post(ensureAuthenticated, postListing);
 
 app.route("/api/listings/:listingId")

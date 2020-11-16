@@ -58,37 +58,41 @@ class LoginForm extends Component {
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                <h2>Login</h2>
+                    <h2>Login</h2>
 
-                <label>
-                    Username
+                    <label>
+                        Username
+                        <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        onChange={this.handleChange}
+                        value={this.state.username}
+                        />
+                    </label>
+
+                    <label>
+                        Password
+                        <input
+                        type="password"
+                        name="password"
+                        onChange={this.handleChange}
+                        value={this.state.password}
+                        />
+                    </label>
+
                     <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    onChange={this.handleChange}
-                    value={this.state.username}
+                        type="submit"
+                        value="Submit"
                     />
-                </label>
 
-                <label>
-                    Password
-                    <input
-                    floatingLabelText="Password"
-                    type="password"
-                    name="password"
-                    onChange={this.handleChange}
-                    value={this.state.password}
-                    />
-                </label>
+                </form>
 
-                <input
-                    type="submit"
-                    value="Submit"
-                />
+                <div>
+                    {this.state.isSubmitting ? "Submitting..." : this.state.message}
+                </div>
 
                 <p>Don't have an account? <Link to={'/signup'}>Create one</Link>.</p>
-                </form>
             </div>
         )
     }

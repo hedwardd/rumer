@@ -17,14 +17,6 @@ const userSchema = new Schema(
 );
 const User = mongoose.model("User", userSchema);
 
-const userSessionSchema = new Schema(
-	{
-		_associatedUser: Schema.Types.ObjectId,
-		session: { type: String }
-	}
-);
-const UserSession = mongoose.model("UserSession", userSessionSchema);
-
 const listingSchema = new Schema(
 	{
 		title: { type: String, required: true, trim: true },
@@ -51,4 +43,4 @@ const bookingSchema = new Schema(
 const Booking = mongoose.model("Booking", bookingSchema);
 
 
-module.exports = { User, UserSession, Listing, Booking };
+module.exports = { User, Listing, Booking };
