@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+// NICE-TO-HAVE: If user is already logged in, this page should not render
 class LoginForm extends Component {
     constructor(props) {
       super(props);
@@ -41,17 +42,13 @@ class LoginForm extends Component {
         });
         this.setState({ isSubmitting: false });
         const data = await res.json();
-        !data.hasOwnProperty("error")
-            ? this.setState({ message: data.success })
-            : this.setState({ message: data.error, isError: true });
-        setTimeout(() => this.setState(
-            {
-                username: "",
-                password: "",
-                isSubmitting: false,
-                isError: false
-            }),
-            1600);
+        data.hasOwnProperty("error")
+            ? this.setState({ message: data.error, isError: true })
+            : this.setState({ message: data.success });
+        setTimeout(() => {
+            this.props.loginHandler(data.user);
+            window.open("/browse", "_self")
+        }, 1600);
     };
 
     render() {

@@ -19,20 +19,20 @@ passport.use(
 		User.findOne(
 			{ username: username },
 			async (err, user) => {
-				console.log("User " + username + " attempted to log in.");
+				// console.log("User " + username + " attempted to log in.");
 				if (err) {
 					console.error(err);
 					return done(err);
 				}
 				if (!user) {
-					console.log("No such user found.");
+					// console.log("No such user found.");
 					return done(null, false);
 				}
 				if (!await bcrypt.compare(password, user.password)) { // Original: if(password !== user.password) {
-					console.log("Password is incorrect.");
+					// console.log("Password is incorrect.");
 					return done(null, false);
 				}
-				console.log("User has been authenticated.");
+				// console.log("User has been authenticated.");
 				return done(null, user);
 			}
 		);
@@ -223,7 +223,7 @@ let ensureAuthenticated = (req, res, next) => {
 	if (req.isAuthenticated()) {
 		return next();
 	} else {
-		console.log("Authentication failed.");
+		// console.log("Authentication failed.");
 		res.send("Authentication failed.");
 	}
 };
@@ -237,7 +237,10 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 // Put all API endpoints under '/api'
 app.route("/api/login")
 	.post(passport.authenticate("local"), (req, res) => {
-		res.json({success: "Welcome back!"});
+		res.json({
+			success: "Welcome back!",
+			user: req.user
+		});
 	});
 
 app.route("/api/auth")
@@ -265,7 +268,7 @@ app.route("/api/user")
 	.post(registerNewUser);
 	
 app.route("/api/listings")
-	.get(ensureAuthenticated, getListings)
+	.get(getListings)
 	.post(ensureAuthenticated, postListing);
 
 app.route("/api/listings/:listingId")
