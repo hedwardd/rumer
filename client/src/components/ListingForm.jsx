@@ -27,10 +27,12 @@ class ListingForm extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     this.setState({ isSubmitting: true });
-
+    let listingData = {
+      ...this.state.values
+    }
     const res = await fetch("/api/listings", {
       method: "POST",
-      body: JSON.stringify(this.state.values),
+      body: JSON.stringify(listingData),
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Credentials": true

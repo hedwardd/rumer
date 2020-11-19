@@ -4,10 +4,10 @@ class BookingForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-        values: {
-            checkIn: "",
-            checkOut: ""
-        },
+            values: {
+                checkIn: "",
+                checkOut: ""
+            },
         isSubmitting: false,
         isError: false
         };

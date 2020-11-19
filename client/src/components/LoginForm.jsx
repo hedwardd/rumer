@@ -8,8 +8,7 @@ class LoginForm extends Component {
       this.state = {
         username: "",
         password: "",
-        isSubmitting: false,
-        isError: false
+        isSubmitting: false
       };
   
       this.handleChange = this.handleChange.bind(this);
@@ -41,21 +40,27 @@ class LoginForm extends Component {
             headers: { "Content-Type": "application/json" } 
         });
         this.setState({ isSubmitting: false });
-        const data = await res.json();
-        data.hasOwnProperty("error")
-            ? this.setState({ message: data.error, isError: true })
-            : this.setState({ message: data.success });
-        setTimeout(() => {
-            this.props.loginHandler(data.user);
-            window.open("/browse", "_self")
-        }, 1600);
+        if (res.status === 401) this.setState({
+            password: "",
+            message: "The credentials you entered are invalid. Please try again." 
+        })
+        else {
+            const data = await res.json();
+            data.hasOwnProperty("error")
+                ? this.setState({ message: data.error })
+                : this.setState({ message: data.success });
+            setTimeout(() => {
+                this.props.loginHandler(data.user);
+                window.open("/browse", "_self")
+            }, 1600);
+        }
     };
 
     render() {
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <h2>Login</h2>
+                    <h2>Log in</h2>
 
                     <label>
                         Username

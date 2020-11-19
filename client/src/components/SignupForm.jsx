@@ -7,8 +7,7 @@ class SignupForm extends Component {
       this.state = {
         username: "",
         password: "",
-        isSubmitting: false,
-        isError: false
+        isSubmitting: false
       };
   
       this.handleChange = this.handleChange.bind(this);
@@ -42,10 +41,9 @@ class SignupForm extends Component {
         this.setState({ isSubmitting: false });
         const data = await res.json();
         data.hasOwnProperty("error")
-            ? this.setState({ message: data.error, isError: true })
+            ? this.setState({ message: data.error })
             : this.setState({ message: data.success });
-        setTimeout(() => this.setState({ 
-            isError: false,
+        setTimeout(() => this.setState({
             message: "",
             username: "",
             password: "",
@@ -58,7 +56,7 @@ class SignupForm extends Component {
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <h2>Sign Up</h2>
+                    <h2>Sign up</h2>
 
                     <label>
                         Username

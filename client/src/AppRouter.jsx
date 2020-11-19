@@ -9,6 +9,8 @@ import ListingForm from "./components/ListingForm";
 import ListingBrowser from "./components/ListingBrowser";
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
+import HostDashboard from "./components/HostDashboard";
+import BookingViewer from "./components/BookingViewer";
 
 
 class AppRouter extends Component {
@@ -81,6 +83,7 @@ class AppRouter extends Component {
     render() {
 
         let isAuthenticated = this.state.authenticated;
+        let user = this.state.user;
 
         return (
             <Router >
@@ -98,7 +101,13 @@ class AppRouter extends Component {
                         </li>
     
                         {isAuthenticated
-                            ? (<li><Link to="/addListing">Add Listing</Link></li>)
+                            ? (
+                                <div>
+                                    <li><Link to="/hosting">Manage Listings</Link></li>
+                                    <li><Link to="/addListing">Add Listing</Link></li>
+                                    <li><Link to="/bookings">My Bookings</Link></li>
+                                </div>
+                            )
                             : ""}
     
                         {isAuthenticated
@@ -109,19 +118,37 @@ class AppRouter extends Component {
                     </ul>
     
                     <Switch>
-                    <Route path="/login">
-                        <LoginForm loginHandler={this._handleLogin} />
-                    </Route>
-                    <Route path="/signup">
-                        <SignupForm />
-                    </Route>
-                    <Route path="/browse">
-                        <ListingBrowser />
-                    </Route>
-                    <Route path="/addListing">
-                        <ListingForm />
-                    </Route>
-                    <Route path="/" component={()=>(window.open("/browse", "_self"))} />
+
+                        <Route path="/login">
+                            <LoginForm loginHandler={this._handleLogin} />
+                        </Route>
+
+                        <Route path="/signup">
+                            <SignupForm />
+                        </Route>
+
+                        <Route path="/browse">
+                            <ListingBrowser />
+                        </Route>
+
+                        <Route path="/bookings">
+                            <BookingViewer />
+                        </Route>
+
+                        <Route path="/addListing">
+                            <ListingForm user={ user } />
+                        </Route>
+
+                        <Route path="/addListing">
+                            <ListingForm user={ user } />
+                        </Route>
+
+                        <Route path="/hosting">
+                            <HostDashboard user={ user } />
+                        </Route>
+
+                        <Route path="/" component={()=>(window.open("/browse", "_self"))} />
+
                     </Switch>
                 </div>
             </Router>

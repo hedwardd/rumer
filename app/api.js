@@ -70,9 +70,7 @@ app.use(passport.session());
 /**
  * Route Handlers
  */
-
-
-const registerNewUser = async (req, res) => {
+const registerNewUser = (req, res) => {
 	User.findOne({ username: req.body.username }, async (err, foundUser) => {
 		if (err) {
 			console.error(err);
@@ -101,11 +99,21 @@ const registerNewUser = async (req, res) => {
 	});
 };
 
+let ensureAuthenticated = (req, res, next) => {
+	if (req.isAuthenticated()) {
+		return next();
+	} else {
+		// console.log("Authentication failed.");
+		res.send("Authentication failed.");
+	}
+};
+
 // TO-DO: Add server-side validation to form values
 const postListing = (req, res) => {
 	if (!req.body.title) res.send("missing title");
 	else {
 		let { title, street1, street2, city, zip, state, description, photoURLs } = req.body;
+		let _hostUser = req.user._id;
 		let newListing = new Listing({ 
 			title,
 			photoURLs,
@@ -116,7 +124,8 @@ const postListing = (req, res) => {
 				zip,
 				state
 			},
-			description 
+			description,
+			_hostUser
 		});
 		newListing.save((err, savedListing) => {
 			if (err) {
@@ -146,18 +155,29 @@ const getListingById = (req, res) => {
 	});
 };
 
+const getListingsByHost = (req, res) => {
+	let _hostUser = req.params.hostId;
+	Listing.find({ _hostUser: _hostUser }, "-__v", (err, foundListings) => {
+		if (err) {
+			console.error(err);
+			res.send("Error finding listings with that host.");
+		} else res.json(foundListings);
+	});
+};
+
+
 const postBooking = (req, res) => {
-	let _associatedListing = req.body._associatedListing;
-	let checkIn = req.body.checkIn;
-	let checkOut = req.body.checkOut;
-	if (!(_associatedListing && checkIn && checkOut)) {
+	let { _associatedListing, checkIn, checkOut } = req.body;
+	let _guestUser = req.user._id;
+	if (!(_associatedListing && checkIn && checkOut && _guestUser)) {
 		console.error("Error: Missing parameter.");
 		res.send("Error: Missing parameter.");
 	} else {
 		let newBooking = new Booking({
-			_associatedListing: _associatedListing,
-			checkIn: checkIn,
-			checkOut: checkOut
+			_associatedListing,
+			checkIn,
+			checkOut,
+			_guestUser
 		});
 		// Confirm there is a listing with that ID.
 		Listing.findOne(
@@ -181,7 +201,7 @@ const postBooking = (req, res) => {
 								res.send("Error searching for conflicting bookings.");
 							} else {
 								// console.log(foundBookings);
-								if (foundBookings.length > 0) {
+								if (foundBookings.length) {
 									console.error("Error: found conflicting bookings: " + foundBookings);
 									res.send("Error: found conflicting bookings.");
 								} else {
@@ -189,7 +209,9 @@ const postBooking = (req, res) => {
 										if (err) {
 											console.error(err);
 											res.send("Could not save booking");
-										} else res.json(savedBooking);
+										} else {
+											res.json(savedBooking);
+										}
 									});
 								}
 							}
@@ -207,7 +229,7 @@ const getBookingsByListing = (req, res) => {
 		res.send("Error: Missing listingId");
 	} else {
 		Booking.find(
-			{ _associatedListing: _associatedListing },
+			{ _associatedListing },
 			"-__v -_id",
 			(err, foundBookings) => {
 				if (err) {
@@ -219,13 +241,17 @@ const getBookingsByListing = (req, res) => {
 	}
 };
 
-let ensureAuthenticated = (req, res, next) => {
-	if (req.isAuthenticated()) {
-		return next();
-	} else {
-		// console.log("Authentication failed.");
-		res.send("Authentication failed.");
-	}
+const getBookingsByUser = (req, res) => {
+	let _guestUser = req.user._id;
+	Booking.find(
+		{ _guestUser }, // Does this work??
+		(err, foundBookings) => {
+			if (err) {
+				console.error(err);
+				res.send("Could not get bookings");
+			} else res.json(foundBookings);
+		}
+	);
 };
 
 /**
@@ -248,14 +274,12 @@ app.route("/api/auth")
 		if (req.user) {
 			res.json({
 				success: true,
-				message: "user has successfully authenticated",
+				message: "User has successfully authenticated",
 				user: req.user,
 				cookies: req.cookies
 			});
 		}
 	});
-
-	
 
 app.route("/api/logout")
 	.get((req, res) => {
@@ -264,7 +288,6 @@ app.route("/api/logout")
 	});
 
 app.route("/api/user")
-	// .get(logInUser)
 	.post(registerNewUser);
 	
 app.route("/api/listings")
@@ -274,9 +297,14 @@ app.route("/api/listings")
 app.route("/api/listings/:listingId")
 	.get(getListingById);
 
+app.route("api/listings/host/:hostId")
+	.get(ensureAuthenticated, getListingsByHost);
 
-app.route("/api/bookings/:listingId")
-	.get(getBookingsByListing);
+// app.route("/api/bookings/listing/:listingId")
+// 	.get(getBookingsByListing);
+
+app.route("/api/myBookings/")
+	.get(ensureAuthenticated, getBookingsByUser);
 
 app.route("/api/bookings")
 	.post(postBooking);
