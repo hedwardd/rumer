@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 import ListingForm from "./components/ListingForm";
 import ListingBrowser from "./components/ListingBrowser";
@@ -11,6 +10,7 @@ import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 import HostDashboard from "./components/HostDashboard";
 import BookingViewer from "./components/BookingViewer";
+import NavBar from "./components/NavBar";
 
 
 class AppRouter extends Component {
@@ -87,70 +87,44 @@ class AppRouter extends Component {
 
         return (
             <Router >
-                <div>
-                    {isAuthenticated
-                        ? (<p>Logged in as {this.state.user.username}</p>)
-                        : (<p>Not logged in.</p>)}
-                    <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
+                <NavBar 
+                    isAuthenticated={isAuthenticated} 
+                    user={user} 
+                    _handleLogout={this._handleLogout} 
+                />
     
-                        <li>
-                            <Link to="/browse">Browse</Link>
-                        </li>
-    
-                        {isAuthenticated
-                            ? (
-                                <div>
-                                    <li><Link to="/hosting">Manage Listings</Link></li>
-                                    <li><Link to="/addListing">Add Listing</Link></li>
-                                    <li><Link to="/bookings">My Bookings</Link></li>
-                                </div>
-                            )
-                            : ""}
-    
-                        {isAuthenticated
-                            ? (<li><Link onClick={this._handleLogout}>Log out</Link></li>)
-                            : (<li><Link to="/login">Log in</Link></li>)
-                        }
+                <Switch>
+                    <Route path="/login">
+                        <LoginForm loginHandler={this._handleLogin} />
+                    </Route>
 
-                    </ul>
-    
-                    <Switch>
+                    <Route path="/signup">
+                        <SignupForm />
+                    </Route>
 
-                        <Route path="/login">
-                            <LoginForm loginHandler={this._handleLogin} />
-                        </Route>
+                    <Route path="/browse">
+                        <ListingBrowser />
+                    </Route>
 
-                        <Route path="/signup">
-                            <SignupForm />
-                        </Route>
+                    <Route path="/bookings">
+                        <BookingViewer />
+                    </Route>
 
-                        <Route path="/browse">
-                            <ListingBrowser />
-                        </Route>
+                    <Route path="/addListing">
+                        <ListingForm user={ user } />
+                    </Route>
 
-                        <Route path="/bookings">
-                            <BookingViewer />
-                        </Route>
+                    <Route path="/addListing">
+                        <ListingForm user={ user } />
+                    </Route>
 
-                        <Route path="/addListing">
-                            <ListingForm user={ user } />
-                        </Route>
+                    <Route path="/hosting">
+                        <HostDashboard user={ user } />
+                    </Route>
 
-                        <Route path="/addListing">
-                            <ListingForm user={ user } />
-                        </Route>
+                    <Route path="/" component={()=>(window.open("/browse", "_self"))} />
+                </Switch>
 
-                        <Route path="/hosting">
-                            <HostDashboard user={ user } />
-                        </Route>
-
-                        <Route path="/" component={()=>(window.open("/browse", "_self"))} />
-
-                    </Switch>
-                </div>
             </Router>
         );
 

@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import {
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
-import Listing from "./Listing.jsx";
 
 class HostDashboard extends Component {
     constructor(props) {
