@@ -166,12 +166,22 @@ const getListingsByHost = (req, res) => {
 };
 
 
+
 const postBooking = (req, res) => {
 	let { _associatedListing, checkIn, checkOut } = req.body;
 	let _guestUser = req.user._id;
+	let dateNow = new Date();
+	let dateCheckIn = new Date(checkIn);
+	let dateCheckOut = new Date(checkOut);
 	if (!(_associatedListing && checkIn && checkOut && _guestUser)) {
 		console.error("Error: Missing parameter.");
 		res.send("Error: Missing parameter.");
+	} else if (dateCheckIn < dateNow || dateCheckOut < dateNow) {
+		console.log("Booking failed because checkIn or checkOut is in the past.");
+		res.send("Error: Bookings must be made at least 24 hours prior to check-in.");
+	} else if (checkOut < checkIn) {
+		console.log("Booking failed because checkOut before checkIn.");
+		res.send("Error: Check-out cannot be before check-in.");
 	} else {
 		let newBooking = new Booking({
 			_associatedListing,
@@ -179,6 +189,7 @@ const postBooking = (req, res) => {
 			checkOut,
 			_guestUser
 		});
+
 		// Confirm there is a listing with that ID.
 		Listing.findOne(
 			{ _id: _associatedListing },
@@ -187,35 +198,50 @@ const postBooking = (req, res) => {
 					console.error(err);
 					res.send("Error searching for listing with that ID."); // Do 0 results send an error?
 				} else {
-					// Confirm there are no conflicting bookings
-					Booking.find(
-						{
-							_associatedListing: foundListing,
-							checkIn: { $gte: checkOut },
-							checkOut: { $lte: checkIn }
-						},
-						"-__v -_id",
-						(err, foundBookings) => {
-							if (err) {
-								console.error(err);
-								res.send("Error searching for conflicting bookings.");
-							} else {
-								// console.log(foundBookings);
-								if (foundBookings.length) {
-									console.error("Error: found conflicting bookings: " + foundBookings);
-									res.send("Error: found conflicting bookings.");
+
+					// Check if host is the same as the guest.
+					if (foundListing._hostUser.toString() == _guestUser.toString()) {
+						console.log("Booking failed because guest is same as listing host.");
+						res.send("Error: Host cannot book own listing.");
+					} else {
+
+						// TO-DO: Confirm there are no conflicting bookings
+						// let thisCheckIn = req.body.checkIn;
+						// let thisCheckOut = req.body.checkOut;
+						// Booking
+						// 	.find({ _associatedListing: foundListing })
+						//	.or([{ checkIn: { $gte: ourCheckOut }, checkOut: { $lte: ourCheckIn } }])
+						Booking.find(
+							{
+								_associatedListing: foundListing,
+								checkIn: { $gte: checkOut },
+								checkOut: { $lte: checkIn }
+							},
+							"-__v -_id",
+							(err, foundBookings) => {
+								if (err) {
+									console.error(err);
+									res.send("Error searching for conflicting bookings.");
 								} else {
-									newBooking.save((err, savedBooking) => {
-										if (err) {
-											console.error(err);
-											res.send("Could not save booking");
-										} else {
-											res.json(savedBooking);
-										}
-									});
+									// console.log(foundBookings);
+									if (foundBookings.length) {
+										console.error("Error: found conflicting bookings: " + foundBookings);
+										res.send("Error: found conflicting bookings.");
+									} else {
+										newBooking.save((err, savedBooking) => {
+											if (err) {
+												console.error(err);
+												res.send("Could not save booking");
+											} else {
+												res.json(savedBooking);
+											}
+										});
+									}
 								}
 							}
-						});
+						);
+
+					}
 				}
 			}
 		);
@@ -303,7 +329,7 @@ app.route("api/listings/host/:hostId")
 // app.route("/api/bookings/listing/:listingId")
 // 	.get(getBookingsByListing);
 
-app.route("/api/myBookings/")
+app.route("/api/myBookings")
 	.get(ensureAuthenticated, getBookingsByUser);
 
 app.route("/api/bookings")
