@@ -1,10 +1,21 @@
 import React from "react";
-import './App.css';
+import { createGlobalStyle } from 'styled-components'
 import AppRouter from "./AppRouter.jsx";
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    box-sizing: border-box;
+  }
+`
 
 const App = () => {
   
-  return <AppRouter />;
+  return (
+    <div>
+      <GlobalStyle />
+      <AppRouter />
+    </div>
+  );
 }
 
 export default App;
