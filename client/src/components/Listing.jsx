@@ -5,7 +5,12 @@ import BookingForm from "./BookingForm.jsx";
 class Listing extends Component {
   
   // Initialize state
-  state = {}
+  constructor(props) {
+    super(props);
+    this.state = {};
+
+    this.getListingInfo = this.getListingInfo.bind(this);
+  }
 
   // Fetch listing info after first mount
   componentDidMount() {
@@ -33,11 +38,15 @@ class Listing extends Component {
 
     return (
       <div className="listing-view">
-          <h1>{this.state.title}</h1>
-          <p>{this.state.description}</p>
-          {images}
 
-          <BookingForm listingId={this.state._id} />
+        <h1>{this.state.title}</h1>
+
+        {images}
+
+        <p>{this.state.description}</p>
+
+        <BookingForm  user={ this.props.user } listingId={this.state._id} />
+        
       </div>
     );
   }

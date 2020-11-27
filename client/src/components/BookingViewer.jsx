@@ -17,7 +17,7 @@ class BookingViewer extends Component {
 
   getBookings = () => {
     // Get the listings and store them in state
-    fetch("/api/myBookings/", {
+    fetch("/api/myBookings", {
       credentials: "include",
       headers: {
         Accept: "application/json",

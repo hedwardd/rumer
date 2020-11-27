@@ -103,7 +103,7 @@ class AppRouter extends Component {
                     </Route>
 
                     <Route path="/browse">
-                        <ListingBrowser />
+                        <ListingBrowser user={ user } />
                     </Route>
 
                     <Route path="/bookings">
@@ -115,6 +115,7 @@ class AppRouter extends Component {
                     </Route>
 
                     <Route path="/addListing">
+                        {/* TO-DO: Does this still need the user prop? */}
                         <ListingForm user={ user } />
                     </Route>
 

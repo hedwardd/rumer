@@ -51,7 +51,7 @@ class LoginForm extends Component {
                 : this.setState({ message: data.success });
             setTimeout(() => {
                 this.props.loginHandler(data.user);
-                window.open("/browse", "_self")
+                window.open("/browse", "_self");
             }, 1600);
         }
     };

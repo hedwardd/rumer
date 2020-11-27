@@ -1,24 +1,51 @@
-import React, { Component } from 'react';
-import {
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import React, { Component } from "react";
+import { Switch, Route, Link } from "react-router-dom";
 import { withRouter } from "react-router";
 import Listing from "./Listing.jsx";
+import styled from "styled-components";
+
+const StyledListingBrowser = styled.div`
+  padding: 0px 24px;
+`;
+
+const StyledImg = styled.img`
+  width: 20vw;
+  height: 20vh;
+  border-radius: 1vw;
+`;
+
+const StyledUnorderedList = styled.ul`
+  display: contents;
+`;
+
+const StyledListItem = styled.li`
+  list-style-type: none;
+`;
+
+const ListingContainer = styled.div`
+  display: flex;
+`;
+
+const StyledLink = styled(Link)`
+  padding: 1vw;
+  text-decoration: none;
+  color: black;
+`;
 
 class ListingBrowser extends Component {
-  // Initialize state
-  state = { listings: [] }
+  constructor(props) {
+    super(props);
+    this.state = { listings: [] };
 
-  // Fetch listings after first mount
+    this.getListings = this.getListings.bind(this);
+  }
+
   componentDidMount() {
     this.getListings();
   }
 
   getListings = () => {
-    // Get the listings and store them in state
-    fetch('/api/listings', {
+    fetch("/api/listings", {
       credentials: "include",
       headers: {
         Accept: "application/json",
@@ -36,43 +63,43 @@ class ListingBrowser extends Component {
     const { match } = this.props;
 
     return (
-      <div className="listingBrowser">
+      <div>
         <Switch>
           <Route path={`${match.path}/:listingId`}>
-            <Listing />
+            <Listing user={this.props.user} />
           </Route>
           <Route path={match.path}>
-            {/* Render the listings if we have them */}
-            {listings.length ? (
-              <div>
-                  
-                  <h1>Listings</h1>
-                  <ul className="listings">
+              <StyledListingBrowser>
+
+                <h1>Listings</h1>
+
+                {listings.length ? (
+                  // Render the listings if we have them
+                  <StyledUnorderedList>
+                    <hr/>
                     {listings.map((listing, index) =>
-                      <li key={index}>
-                        <Link to={`/browse/${listing._id}`}>
-                          {listing.title}
-                        </Link>
-                      </li>
+                      <StyledListItem key={index}>
+                        <ListingContainer>
+
+                          <StyledImg src={listing.photoURLs[0]} />
+
+                          <StyledLink to={`/browse/${listing._id}`}>
+                            {listing.title}
+                          </StyledLink>
+
+                        </ListingContainer>
+                        <hr/>
+                      </StyledListItem>
                     )}
-                  </ul>
-                  <button
-                    className="again"
-                    onClick={this.getListings}>
-                    Refresh
-                  </button>
-                </div>
-              ) : (
-                // Render a helpful message otherwise
-                <div>
-                  <h1>No listings</h1>
-                  <button
-                    className="again"
-                    onClick={this.getListings}>
-                    Try Again?
-                  </button>
-                </div>
-              )}
+                  </StyledUnorderedList>
+                ) : (
+                  // Otherwise, render a helpful message
+                  <div>
+                    <p>No listings found.</p>
+                  </div>
+                )}
+              
+              </StyledListingBrowser>
           </Route>
         </Switch>
       </div>

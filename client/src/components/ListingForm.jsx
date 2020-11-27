@@ -1,5 +1,23 @@
 import React, { Component } from 'react';
 import ReactFilestack from 'filestack-react';
+import styled from "styled-components";
+
+const StyledListingForm = styled.div`
+  background-color: #FFFFFF;
+  bottom: 0;
+  box-sizing: content-box;
+  color: #484848;
+  font-family: Circular,-apple-system,system-ui,Roboto,"Helvetica Neue",sans-serif;
+  font-size: 14px;
+  left: 0;
+  line-height: 20.02px;
+  padding-left: 91.2px;
+  position: fixed;
+  quotes: auto;
+  // top: 0;
+  width: 50%;
+  z-index: -1;
+`;
 
 class ListingForm extends Component {
   constructor(props) {
@@ -97,7 +115,7 @@ class ListingForm extends Component {
 
   render() {
     return (
-      <div>
+      <StyledListingForm>
         <form onSubmit={this.handleSubmit} className="listing-form">
          <label>
            Title:
@@ -204,7 +222,7 @@ class ListingForm extends Component {
         <div className={`message ${this.state.isError && "error"}`}>
           {this.state.isSubmitting ? "Submitting..." : this.state.message}
         </div>
-      </div>
+      </StyledListingForm>
     );
   }
 }
