@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import { withRouter } from "react-router";
-import Listing from "./Listing.jsx";
+import ListingFullView from "./ListingFullView.jsx";
 import styled from "styled-components";
 
 const StyledListingBrowser = styled.div`
@@ -66,7 +66,7 @@ class ListingBrowser extends Component {
       <div>
         <Switch>
           <Route path={`${match.path}/:listingId`}>
-            <Listing user={this.props.user} />
+            <ListingFullView user={this.props.user} />
           </Route>
           <Route path={match.path}>
               <StyledListingBrowser>

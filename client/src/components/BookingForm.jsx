@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from "react-dates";
-import 'react-dates/initialize';
+import { DateRangePicker } from "react-dates";
 import styled from "styled-components";
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
 const StyledBookingForm = styled.div`
     width: 33.33%;
@@ -50,22 +51,17 @@ class BookingForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            values: {
-                checkIn: "",
-                checkOut: ""
-            },
-        isSubmitting: false,
-        isError: false
+            checkIn: "",
+            checkOut: ""
         };
 
-        this.handleChange = this.handleChange.bind(this);
+        this._onDatesChange = this._onDatesChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    // TO-DO: Clean up the old state values from here
     handleSubmit = async event => {
         event.preventDefault();
-
-        console.log(this.props.user);
 
         let isLoggedOut = Object.keys(this.props.user).length === 0;
 
@@ -77,7 +73,7 @@ class BookingForm extends Component {
             this.setState({ isSubmitting: true });
 
             const bookingObject = { 
-                ...this.state.values,
+                ...this.state,
                 _associatedListing: this.props.listingId 
             };
 
@@ -91,92 +87,49 @@ class BookingForm extends Component {
             !data.hasOwnProperty("error")
                 ? this.setState({ message: data.success })
                 : this.setState({ message: data.error, isError: true });
-            setTimeout(() => this.setState({ 
-                isError: false,
-                message: "",
-                values: { 
-                    checkIn: "",
-                    checkOut: "" 
-                } 
+            setTimeout(() => this.setState({
+                checkIn: "",
+                checkOut: "" 
                 }),
             1600
             );
         }
     };
-
-    handleChange = event => {
-        const value = event.target.value;
-        const name = event.target.name;
-
+    
+    _onDatesChange = ({ startDate, endDate }) => {
         this.setState({
-            values: { 
-                ...this.state.values, 
-                [name]: value
-            
-            }
+            checkIn: startDate,
+            checkOut: endDate
         });
     }
 
     render() {
         return (
             <StyledBookingForm>
+
                 <form onSubmit={this.handleSubmit} className="form">
+
                     <DateInputContainer>
-                        <div>
-
-                            <label>
-                                Check In Date:
-                                <input
-                                    type="date"
-                                    required
-                                    id="checkIn"
-                                    name="checkIn"
-                                    label="checkIn"
-                                    value={this.state.values.checkIn}
-                                    onChange={this.handleChange}
-                                />
-                            </label>
-
-                        </div>
-
-                        <div>
-
-                            <label>
-                                Check Out Date:
-                                <input
-                                    type="date"
-                                    required
-                                    id="checkOut"
-                                    name="checkOut"
-                                    label="checkOut"
-                                    value={this.state.values.checkOut}
-                                    onChange={this.handleChange}
-                                />
-                            </label>
-                            
-                        </div>
-
-                        <div>
 
                         <DateRangePicker
-                            startDate={this.state.values.checkIn} // momentPropTypes.momentObj or null,
+                            startDate={this.state.checkIn} // momentPropTypes.momentObj or null,
                             startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                            endDate={this.state.values.endDate} // momentPropTypes.momentObj or null,
+                            endDate={this.state.checkOut} // momentPropTypes.momentObj or null,
                             endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                            onDatesChange={({ startDate, endDate }) => this.setState({values: { startDate, endDate }})} // PropTypes.func.isRequired,
+                            onDatesChange={this._onDatesChange} // PropTypes.func.isRequired,
                             focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
                             onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
                         />
 
-                        </div>
-
                     </DateInputContainer>
                     
-                    <ReserveButton type="submit" value="Reserve" />
+                    <ReserveButton
+                        type="submit"
+                        value="Reserve"
+                    />
+
                 </form>
-                <div>
-                {this.state.isSubmitting ? "Submitting..." : this.state.message}
-                </div>
+                
             </StyledBookingForm>
         );
     }
