@@ -5,7 +5,7 @@ import ListingFullView from "./ListingFullView.jsx";
 import styled from "styled-components";
 
 const StyledListingBrowser = styled.div`
-  padding: 0px 24px;
+  padding: 0px 80px;
 `;
 
 const StyledImg = styled.img`
@@ -95,7 +95,7 @@ class ListingBrowser extends Component {
                 ) : (
                   // Otherwise, render a helpful message
                   <div>
-                    <p>No listings found.</p>
+                    <p>Loading...</p>
                   </div>
                 )}
               

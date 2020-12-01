@@ -3,20 +3,53 @@ import ReactFilestack from 'filestack-react';
 import styled from "styled-components";
 
 const StyledListingForm = styled.div`
-  background-color: #FFFFFF;
-  bottom: 0;
-  box-sizing: content-box;
-  color: #484848;
-  font-family: Circular,-apple-system,system-ui,Roboto,"Helvetica Neue",sans-serif;
-  font-size: 14px;
-  left: 0;
-  line-height: 20.02px;
-  padding-left: 91.2px;
-  position: fixed;
-  quotes: auto;
+  // background-color: #FAFAFA;
   // top: 0;
+`;
+
+const StyledForm = styled.form`
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
   width: 50%;
-  z-index: -1;
+  background-color: #FFFFFF;
+  color: #484848;
+  display: flex;
+  flex-direction: column;
+  color: #484848;
+  font-size: 19px;
+  line-height: 27.17px;
+  padding: 30px 30px 16px;
+`;
+
+const FormSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-bottom: 24px;
+`;
+
+const StyledLabel = styled.label`
+  margin-bottom: 4px;
+  padding-bottom: 8px;
+  padding-top: 9px;
+`;
+
+const StyledButton = styled.button`
+  background-color: #008489;
+  border-style: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 24px;
+  padding: 10px 22px;
+  text-align: center;
 `;
 
 class ListingForm extends Component {
@@ -116,112 +149,153 @@ class ListingForm extends Component {
   render() {
     return (
       <StyledListingForm>
-        <form onSubmit={this.handleSubmit} className="listing-form">
-         <label>
-           Title:
-           <input
-            type="text"
-            required
-            id="title"
-            name="title"
-            label="Title"
-            value={this.state.values.title}
-            onChange={this.handleChange}
-          />
-        </label>
-        <label>
-          Address line 1:
-          <input
-            type="text"
-            // required
-            id="street1"
-            name="street1"
-            label="Address line 1"
-            value={this.state.values.street1}
-            onChange={this.handleChange}
-            autoComplete="shipping address-line1"
-          />
-        </label>
-        <label>
-          Address line 2:
-          <input
-            type="text"
-            id="street2"
-            name="street2"
-            label="Address line 2"
-            value={this.state.values.street2}
-            onChange={this.handleChange}
-            autoComplete="shipping address-line2"
-          />
-        </label>
-        <label>
-          City:
-          <input
-            type="text"
-            // required
-            id="city"
-            name="city"
-            label="City"
-            value={this.state.values.city}
-            onChange={this.handleChange}
-            autoComplete="shipping address-level2"
-          />
-        </label>
-        <label>
-          State:
-          <input
-            type="text"
-            // required
-            id="state"
-            name="state"
-            label="State"
-            value={this.state.values.state}
-            onChange={this.handleChange}
-            autoComplete="shipping address-level2"
-          />
-        </label>
-        <label>
-          Zip:
-          <input
-            type="text"
-            // required
-            id="zip"
-            name="zip"
-            label="Zip"
-            value={this.state.values.zip}
-            onChange={this.handleChange}
-            autoComplete="shipping postal-code"
-          />
-        </label>
-        <label>
-          Description:
-          <textarea
-            // required
-            id="description"
-            name="description"
-            label="Description"
-            value={this.state.values.description}
-            onChange={this.handleChange}
-          />
-        </label>
-        <div id="embedded" >
-          <ReactFilestack        
-            apikey="AndaLCkprQkKsCBl3aG2rz"
-            // componentDisplayMode={{
-            //   type: 'immediate'
-            // }}
-            // actionOptions={{
-            //   displayMode: "inline",
-            //   container: "embedded"
-            // }}
-            onSuccess={this.handleFileUpload}
+
+        <StyledForm onSubmit={this.handleSubmit}>
+
+          <h1>Add a Listing</h1>
+
+          <FormSection>
+            <StyledLabel>
+              Title
+            </StyledLabel>
+
+            <input
+                type="text"
+                required
+                id="title"
+                name="title"
+                label="Title"
+                value={this.state.values.title}
+                onChange={this.handleChange}
+              />
+          </FormSection>
+
+          <FormSection>
+            <StyledLabel>
+              Address line 1
+            </StyledLabel>
+            <input
+              type="text"
+              // required
+              id="street1"
+              name="street1"
+              label="Address line 1"
+              value={this.state.values.street1}
+              onChange={this.handleChange}
+              autoComplete="shipping address-line1"
             />
-        </div>
-        <input type="submit" value="Submit" />
-      </form>
+          </FormSection>
+          
+          <FormSection>
+            <StyledLabel>
+              Address line 2
+            </StyledLabel>
+
+            <input
+              type="text"
+              id="street2"
+              name="street2"
+              label="Address line 2"
+              value={this.state.values.street2}
+              onChange={this.handleChange}
+              autoComplete="shipping address-line2"
+            />
+          </FormSection>
+          
+          <FormSection>
+            <StyledLabel>
+              City
+            </StyledLabel>
+
+            <input
+              type="text"
+              // required
+              id="city"
+              name="city"
+              label="City"
+              value={this.state.values.city}
+              onChange={this.handleChange}
+              autoComplete="shipping address-level2"
+            />
+          </FormSection>
+          
+          <FormSection>
+            <StyledLabel>
+              State
+            </StyledLabel>
+
+            <input
+              type="text"
+              // required
+              id="state"
+              name="state"
+              label="State"
+              value={this.state.values.state}
+              onChange={this.handleChange}
+              autoComplete="shipping address-level2"
+            />
+          </FormSection>
+          
+          <FormSection>
+            <StyledLabel>
+              Zip
+            </StyledLabel>
+
+            <input
+              type="text"
+              // required
+              id="zip"
+              name="zip"
+              label="Zip"
+              value={this.state.values.zip}
+              onChange={this.handleChange}
+              autoComplete="shipping postal-code"
+            />
+          </FormSection>
+          
+          <FormSection>
+            <StyledLabel>
+              Description
+            </StyledLabel>
+
+            <textarea
+              // required
+              id="description"
+              name="description"
+              label="Description"
+              value={this.state.values.description}
+              onChange={this.handleChange}
+            />
+          </FormSection>
+          
+          <FormSection id="embedded" >
+            <ReactFilestack        
+              apikey="AndaLCkprQkKsCBl3aG2rz"
+              // componentDisplayMode={{
+              //   type: 'immediate'
+              // }}
+              // actionOptions={{
+              //   displayMode: "inline",
+              //   container: "embedded"
+              // }}
+              onSuccess={this.handleFileUpload}
+              />
+          </FormSection>
+
+          <FormSection>
+            <StyledButton
+              as={"input"}
+              type="submit"
+              value="Submit"
+            />
+          </FormSection>
+
+        </StyledForm>
+
         <div className={`message ${this.state.isError && "error"}`}>
           {this.state.isSubmitting ? "Submitting..." : this.state.message}
         </div>
+
       </StyledListingForm>
     );
   }

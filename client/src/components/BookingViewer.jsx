@@ -41,11 +41,11 @@ class BookingViewer extends Component {
             <Listing />
           </Route>
           <Route path={match.path}> */}
+          <h1>Reservations</h1>
             {/* Render the listings if we have them */}
-            {bookings.length ? (
-              <div>
-                  
-                  <h1>Bookings</h1>
+            {
+              bookings.length ? (
+                <div>
                   <ul>
                     {bookings.map((booking, index) =>
                       <li key={index}>
@@ -66,12 +66,7 @@ class BookingViewer extends Component {
               ) : (
                 // Render a helpful message otherwise
                 <div>
-                  <h1>No bookings</h1>
-                  <button
-                    className="again"
-                    onClick={this.getBookings}>
-                    Try Again?
-                  </button>
+                  <p>There are no bookings to show.</p>
                 </div>
               )}
           {/* </Route>

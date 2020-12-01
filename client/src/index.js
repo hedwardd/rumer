@@ -15,6 +15,12 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Montserrat', sans-serif;
     box-sizing: border-box;
   }
+  input {
+    font-family: 'Montserrat', sans-serif;
+  }
+  button {
+    font-family: 'Montserrat', sans-serif;
+  }
 `
 
 ReactDOM.render(

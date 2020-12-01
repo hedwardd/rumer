@@ -43,11 +43,11 @@ class HostDashboard extends Component {
             <Listing />
           </Route>
           <Route path={match.path}> */}
+          <h1>Dashboard</h1>
+
             {/* Render the listings if we have them */}
             {listings.length ? (
               <div>
-                  
-                  <h1>Listings</h1>
                   <ul className="listings">
                     {listings.map((listing, index) =>
                       <li key={index}>
@@ -57,21 +57,11 @@ class HostDashboard extends Component {
                       </li>
                     )}
                   </ul>
-                  <button
-                    className="again"
-                    onClick={this.getListings}>
-                    Refresh
-                  </button>
                 </div>
               ) : (
                 // Render a helpful message otherwise
                 <div>
-                  <h1>No listings</h1>
-                  <button
-                    className="again"
-                    onClick={this.getListings}>
-                    Try Again?
-                  </button>
+                  <p>No listings to show.</p>
                 </div>
               )}
           {/* </Route>
