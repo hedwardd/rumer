@@ -10,6 +10,7 @@ const path = require("path");
 const { User, Listing, Booking } = require("./models.js");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
+const areIntervalsOverlapping = require("date-fns/areIntervalsOverlapping");
 
 /**
  * Declarations
@@ -204,30 +205,17 @@ const postBooking = (req, res) => {
 						console.log("Booking failed because guest is same as listing host.");
 						res.send("Error: Host cannot book own listing.");
 					} else {
-
-						// TO-DO: Confirm there are no conflicting bookings
-						// let thisCheckIn = req.body.checkIn;
-						// let thisCheckOut = req.body.checkOut;
-						// Booking
-						// 	.find({ _associatedListing: foundListing })
-						//	.or([{ checkIn: { $gte: ourCheckOut }, checkOut: { $lte: ourCheckIn } }])
+						// Confirm there are no conflicting bookings already on this listing
 						Booking.find(
-							{
-								_associatedListing: foundListing,
-								checkIn: { $gte: checkOut },
-								checkOut: { $lte: checkIn }
-							},
+							{ _associatedListing: foundListing },
 							"-__v -_id",
 							(err, foundBookings) => {
 								if (err) {
 									console.error(err);
 									res.send("Error searching for conflicting bookings.");
 								} else {
-									// console.log(foundBookings);
-									if (foundBookings.length) {
-										console.error("Error: found conflicting bookings: " + foundBookings);
-										res.send("Error: found conflicting bookings.");
-									} else {
+									if (!foundBookings.length) {
+										// If there no other bookings on listing, save booking
 										newBooking.save((err, savedBooking) => {
 											if (err) {
 												console.error(err);
@@ -236,6 +224,28 @@ const postBooking = (req, res) => {
 												res.json(savedBooking);
 											}
 										});
+									} else {
+										// If there are bookings, make sure they don't conflict with this one
+										let thisBookingInterval = { start: dateCheckIn, end: dateCheckOut };
+										// First, map all other bookings into date intervals
+										let otherBookingIntervals = foundBookings
+											.map(booking => ({ start: new Date(booking.checkIn), end: new Date(booking.checkOut) }));
+										// Next, check each to our proposed interval
+										if (otherBookingIntervals.every(eachInterval => !areIntervalsOverlapping(eachInterval, thisBookingInterval))) {
+											// If there are no conflicts, save and send back the new booking
+											newBooking.save((err, savedBooking) => {
+												if (err) {
+													console.error(err);
+													res.send("Could not save booking");
+												} else {
+													res.json(savedBooking);
+												}
+											});
+										} else {
+											// If a conflict is found, respond back with error message.
+											console.error("Error: found conflicting bookings: " + foundBookings);
+											res.send("Error: found conflicting bookings.");
+										}
 									}
 								}
 							}
@@ -256,7 +266,7 @@ const getBookingsByListing = (req, res) => {
 	} else {
 		Booking.find(
 			{ _associatedListing },
-			"-__v -_id",
+			"-__v -_id -_guestUser",
 			(err, foundBookings) => {
 				if (err) {
 					console.error(err);
@@ -326,8 +336,8 @@ app.route("/api/listings/:listingId")
 app.route("api/listings/host/:hostId")
 	.get(ensureAuthenticated, getListingsByHost);
 
-// app.route("/api/bookings/listing/:listingId")
-// 	.get(getBookingsByListing);
+app.route("/api/bookings/:listingId")
+	.get(getBookingsByListing);
 
 app.route("/api/myBookings")
 	.get(ensureAuthenticated, getBookingsByUser);
