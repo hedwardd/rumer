@@ -3,6 +3,7 @@ import { DateRangePicker } from "react-dates";
 import styled from "styled-components";
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
+import isWithinInterval from "date-fns/isWithinInterval";
 
 const StyledBookingForm = styled.div`
     width: 33.33%;
@@ -51,12 +52,51 @@ class BookingForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            checkIn: "",
-            checkOut: ""
+            haveDatesLoaded: false,
+            bookedDates: [],
+            checkIn: null,
+            checkOut: null
         };
 
         this._onDatesChange = this._onDatesChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.getBookedDates = this.getBookedDates.bind(this);
+        this.isDayBlocked = this.isDayBlocked.bind(this);
+    }
+
+    componentDidMount() {
+        this.getBookedDates(this.props.listingId);
+    }
+    
+    getBookedDates = (listingId) => {
+        console.log("listingId from props: " + listingId);
+        fetch("/api/bookings/" + listingId, {
+            credentials: "include",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(bookings => bookings
+                .map(eachBooking => ({start: new Date(eachBooking.checkIn), end: new Date(eachBooking.checkOut)})))
+            .then(intervals => this.setState({ haveDatesLoaded: true, bookedDates: intervals }));
+    }
+
+    isDayBlocked = day => {
+        let dateOfDay = day._d;
+        const bookedDates = this.state.bookedDates;
+        return bookedDates.length === 0
+            ? false
+            : !bookedDates.every(bookedInterval => !isWithinInterval(dateOfDay, bookedInterval));
+
+    }
+
+    _onDatesChange = ({ startDate, endDate }) => {
+        this.setState({
+            checkIn: startDate,
+            checkOut: endDate
+        });
     }
 
     // TO-DO: Clean up the old state values from here
@@ -73,7 +113,8 @@ class BookingForm extends Component {
             this.setState({ isSubmitting: true });
 
             const bookingObject = { 
-                ...this.state,
+                checkIn: this.state.checkIn,
+                checkOut: this.state.checkOut,
                 _associatedListing: this.props.listingId 
             };
 
@@ -88,22 +129,19 @@ class BookingForm extends Component {
                 ? this.setState({ message: data.success })
                 : this.setState({ message: data.error, isError: true });
             setTimeout(() => this.setState({
-                checkIn: "",
-                checkOut: "" 
+                checkIn: null,
+                checkOut: null 
                 }),
             1600
             );
         }
     };
-    
-    _onDatesChange = ({ startDate, endDate }) => {
-        this.setState({
-            checkIn: startDate,
-            checkOut: endDate
-        });
-    }
 
     render() {
+
+        const haveDatesLoaded = this.state.haveDatesLoaded;
+
+        console.log(this.state.bookedDates);
         return (
             <StyledBookingForm>
 
@@ -111,15 +149,20 @@ class BookingForm extends Component {
 
                     <DateInputContainer>
 
-                        <DateRangePicker
-                            startDate={this.state.checkIn} // momentPropTypes.momentObj or null,
-                            startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-                            endDate={this.state.checkOut} // momentPropTypes.momentObj or null,
-                            endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-                            onDatesChange={this._onDatesChange} // PropTypes.func.isRequired,
-                            focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                            onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
-                        />
+                        { haveDatesLoaded ? (
+                            <DateRangePicker
+                                required
+                                startDate={this.state.checkIn} // momentPropTypes.momentObj or null,
+                                startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                                endDate={this.state.checkOut} // momentPropTypes.momentObj or null,
+                                endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                                onDatesChange={this._onDatesChange} // PropTypes.func.isRequired,
+                                focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                                isDayBlocked={this.isDayBlocked}
+                            />
+
+                        ) : null }
 
                     </DateInputContainer>
                     

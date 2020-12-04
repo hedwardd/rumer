@@ -57,19 +57,17 @@ class ListingFullView extends Component {
 
   render() {
 
+    const hasDataLoaded = Object.keys(this.state).length !== 0;
     let images = null;
     if (this.state.photoURLs) {
       images = this.state.photoURLs.map(url => (
         <img src={url} alt="A look at the listing."></img>
       ))
     }
-
-    console.log(this.state);
-
-    return (
-
+    
+    if (hasDataLoaded) return (
+      // Render the listings if we have them
       <StyledListingFullView>
-
         <TitleSection>
           <h1>{this.state.title}</h1>
         </TitleSection>
@@ -87,10 +85,14 @@ class ListingFullView extends Component {
           <BookingForm  user={ this.props.user } listingId={this.state._id} />
 
         </DetailsSection>
-
       </StyledListingFullView>
-
     );
+    else return (
+      // Otherwise, render a helpful message
+      <div>
+        <p>Loading...</p>
+      </div>
+    )
   }
 }
 

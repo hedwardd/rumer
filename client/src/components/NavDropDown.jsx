@@ -50,6 +50,7 @@ const DropDownContainer = styled.div`
 const DropDownLink = styled(Link)`
     font-weight: ${props => props.primary ? "bold" : "normal"};
     color: black;
+    cursor: pointer;
     box-sizing: border-box;
     background-color: transparent;
     padding: 12px 16px;
@@ -120,7 +121,7 @@ class NavDropDown extends Component {
                         ? (
                             <DropDownContainer>
 
-                                <DropDownLink primary onClick={this.hideMenu} to="/bookings">My Reservations</DropDownLink>
+                                <DropDownLink onClick={this.hideMenu} to="/bookings">My Reservations</DropDownLink>
 
                                 <MenuDivider />
                 
@@ -130,7 +131,7 @@ class NavDropDown extends Component {
 
                                 <MenuDivider />
                 
-                                <DropDownLink onClick={this.props._handleLogout}>Log out</DropDownLink>
+                                <DropDownLink as={"div"} onClick={this.props._handleLogout}>Log out</DropDownLink>
                 
                             </DropDownContainer>
                         )
