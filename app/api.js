@@ -157,15 +157,17 @@ const getListingById = (req, res) => {
 };
 
 const getListingsByHost = (req, res) => {
-	let _hostUser = req.params.hostId;
-	Listing.find({ _hostUser: _hostUser }, "-__v", (err, foundListings) => {
-		if (err) {
-			console.error(err);
-			res.send("Error finding listings with that host.");
-		} else res.json(foundListings);
-	});
+	let _hostUser = req.user._id;
+	if (!_hostUser) res.send("missing title");
+	else {
+		Listing.find({ _hostUser: _hostUser }, "-__v", (err, foundListings) => {
+			if (err) {
+				console.error(err);
+				res.send("Error finding listings with that host.");
+			} else res.json(foundListings);
+		});
+	}
 };
-
 
 
 const postBooking = (req, res) => {
@@ -277,15 +279,45 @@ const getBookingsByListing = (req, res) => {
 	}
 };
 
-const getBookingsByUser = (req, res) => {
+const getBookingsByGuest = (req, res) => {
 	let _guestUser = req.user._id;
 	Booking.find(
-		{ _guestUser }, // Does this work??
+		{ _guestUser },
 		(err, foundBookings) => {
 			if (err) {
 				console.error(err);
 				res.send("Could not get bookings");
 			} else res.json(foundBookings);
+		}
+	);
+};
+
+const getBookingsByHost = (req, res) => {
+	const _hostUser = req.user._id;
+	Listing.find(
+		{ _hostUser },
+		(err, foundListings) => {
+			if (err) {
+				console.error(err);
+				res.send("Could not get listings");
+			} else {
+				if (foundListings.length === 0) {
+					res.json({});
+				} else {
+					// Get IDs of Listings
+					const listingIds = foundListings.map(thisListing => thisListing._id);
+					// Search for bookings by those IDs
+					Booking.find(
+						{_associatedListing: { $in: listingIds }},
+						(err, foundBookings) => {
+							if (err) {
+								console.error(err);
+								res.send("Could not get bookings");
+							} else res.json(foundBookings);
+						}
+					);
+				}
+			}
 		}
 	);
 };
@@ -333,17 +365,21 @@ app.route("/api/listings")
 app.route("/api/listings/:listingId")
 	.get(getListingById);
 
-app.route("api/listings/host/:hostId")
+app.route("/api/host/listings/")
 	.get(ensureAuthenticated, getListingsByHost);
 
 app.route("/api/bookings/:listingId")
 	.get(getBookingsByListing);
 
-app.route("/api/myBookings")
-	.get(ensureAuthenticated, getBookingsByUser);
-
 app.route("/api/bookings")
 	.post(postBooking);
+
+app.route("/api/myBookings")
+	.get(ensureAuthenticated, getBookingsByGuest);
+
+app.route("/api/host/bookings/")
+	.get(ensureAuthenticated, getBookingsByHost);
+
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

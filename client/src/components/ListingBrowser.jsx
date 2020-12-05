@@ -78,7 +78,7 @@ class ListingBrowser extends Component {
                   <StyledUnorderedList>
                     <hr/>
                     {listings.map((listing, index) =>
-                      <StyledListItem key={index}>
+                      <StyledListItem key={listing._id}>
                         <ListingContainer>
 
                           <StyledImg src={listing.photoURLs[0]} />
