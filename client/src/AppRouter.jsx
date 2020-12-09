@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route
+	BrowserRouter as Router,
+	Switch,
+	Route
 } from "react-router-dom";
 import ListingForm from "./components/ListingForm";
 import ListingBrowser from "./components/ListingBrowser";
@@ -11,125 +11,100 @@ import SignupForm from "./components/SignupForm";
 import HostDashboard from "./components/HostDashboard";
 import BookingViewer from "./components/BookingViewer";
 import NavBar from "./components/NavBar";
+import ListingFullView from "./components/ListingFullView";
 
+const _checkIfLoggedIn = async () => {
 
-class AppRouter extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            user: {},
-            authenticated: false
+    const response = await fetch("api/auth", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true
         }
-        this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
-        this._handleLogin = this._handleLogin.bind(this);
-        this._handleLogout = this._handleLogout.bind(this);
-    }
+	})
+	if (response.status === 200) {
+		const userData = await response.json();
+		return userData.user;
+	}
+	else return null;
+}
 
-    componentDidMount() {
-        this.checkIfLoggedIn();
-      }
+const _handleLogout = async () => {
 
-    checkIfLoggedIn() {
-        fetch("api/auth", {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Credentials": true
-            }
-        })
-            .then(res => {
-              if (res.status === 200) return res.json();
-              throw new Error("Failed to authenticate user.");
-            })
-            .then(json => {
-              this.setState({
-                authenticated: true,
-                user: json.user
-              });
-            })
-            .catch(error => {
-              this.setState({
-                authenticated: false,
-                error: "Failed to authenticate user."
-              });
-            });
-    }
+	const response = await fetch("/api/logout");
+	return (response.status === 200) ? true : false;
+}
 
-    _handleLogin(user) {
-        this.setState({
-            authenticated: true,
-            user: user
-          });
-    }
 
-    _handleLogout() {
-        fetch("/api/logout")
-            .then(res => {
-                if (res.status === 200) {
-                    this.setState({
-                        authenticated: false,
-                        user: {}
-                      });
-                    window.open("/", "_self");
-                } else {
-                    throw new Error("Failed to log out user.");
-                }
-            });
-    }
+export default function AppRouter() {
 
-    
-    render() {
+	const [user, setUser] = useState(null);
+	useEffect(() => {
+		if (!user) {
+			async function attemptUserAuth() {
+				const authResult = await _checkIfLoggedIn();
+				if (authResult) setUser(authResult);
+			}
+			attemptUserAuth();
+		}
+	});
 
-        let isAuthenticated = this.state.authenticated;
-        let user = this.state.user;
+	return (
+		<Router >
+			<NavBar
+				user={ user } 
+				_handleLogout={async () => {
+					const isSuccess = await _handleLogout();
+					if (isSuccess) {
+						setUser(null);
+						window.open("/", "_self");
+					}
+				}} 
+			/>
 
-        return (
-            <Router >
-                <NavBar 
-                    isAuthenticated={isAuthenticated} 
-                    user={user} 
-                    _handleLogout={this._handleLogout} 
-                />
-    
-                <Switch>
-                    <Route path="/login">
-                        <LoginForm loginHandler={this._handleLogin} />
-                    </Route>
+			<Switch>
+				<Route path="/login">
+					<LoginForm loginHandler={(user)=> setUser(user)} />
+				</Route>
 
-                    <Route path="/signup">
-                        <SignupForm />
-                    </Route>
+				<Route path="/signup">
+					<SignupForm />
+				</Route>
 
-                    <Route path="/browse">
-                        <ListingBrowser user={ user } />
-                    </Route>
+				<Route path="/browse">
+					<ListingBrowser user={ user } />
+				</Route>
 
-                    <Route path="/bookings">
-                        <BookingViewer />
-                    </Route>
+				<Route path={"/listings/:listingId"}>
+					<ListingFullView user={user} />
+				</Route>
 
-                    <Route path="/addListing">
-                        <ListingForm user={ user } />
-                    </Route>
+				<Route path="/bookings">
+					{user
+						? (<BookingViewer />)
+						: ()=> window.open("/browse", "_self")}
+				</Route>
 
-                    <Route path="/addListing">
-                        {/* TO-DO: Does this still need the user prop? */}
-                        <ListingForm user={ user } />
-                    </Route>
+				<Route path="/addListing">
+					{user
+						// TO-DO: Does this still need the user prop?
+						? (<ListingForm user={ user } />)
+						: ()=> window.open("/browse", "_self")}
+				</Route>
 
-                    <Route path="/hosting">
-                        <HostDashboard user={ user } />
-                    </Route>
+				<Route path="/hosting">
+					{user
+						? (<HostDashboard user={ user } />)
+						: ()=> window.open("/browse", "_self")}
+				</Route>
 
-                    <Route path="/" component={()=>(window.open("/browse", "_self"))} />
-                </Switch>
+				<Route path="/">
+					{()=>(window.open("/browse", "_self"))}
+				</Route>
+			</Switch>
 
-            </Router>
-        );
-
-    }
+		</Router>
+	);
 };
-
-export default AppRouter;

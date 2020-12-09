@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -24,11 +24,6 @@ const DropDownButton = styled.button`
     border: 1px solid #DDDDDD;
     border-radius: 21px;
     z-index: 1;
-    box-shadow: ${props => 
-        props.isOpen
-        ? "0px 8px 16px 0px rgba(0,0,0,0.2)" 
-        : ""
-    };
 `;
 
 const DropDownContainer = styled.div`
@@ -81,67 +76,48 @@ const MenuDivider = styled.div`
     margin: 8px 0;
 `;
 
-class NavDropDown extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showMenu: false
-        }
-        this.showMenu = this.showMenu.bind(this);
-        this.hideMenu = this.hideMenu.bind(this);
-    }
+export default function NavDropDown (props) {
 
-    showMenu(event) {
-        this.setState({
-            showMenu: true
-        });
-    }
+    const username = props.user.username;
+    const [isOpen, setIsOpen] = useState(false);
 
-    hideMenu(event) {
-        this.setState({
-            showMenu: false
-        });
-    }
-    
+    return (
+        <StyledDropDown
+            onMouseEnter={()=>setIsOpen(true)}
+            onMouseLeave={()=>setIsOpen(false)}
+        >
 
-    render() {
+            <DropDownButton isOpen={isOpen}>
+                <p>{username}</p>
+            </DropDownButton>
 
-        let username = this.props.user.username;
-        let isOpen = this.state.showMenu;
+            {isOpen
+                ? (
+                    <DropDownContainer>
 
-        return (
-            <StyledDropDown onMouseEnter={this.showMenu} onMouseLeave={this.hideMenu}>
+                        <DropDownLink onClick={()=>setIsOpen(false)} to="/bookings">
+                            My Reservations
+                        </DropDownLink>
 
-                <DropDownButton isOpen={isOpen}>
-                    <p>{username}</p>
-                </DropDownButton>
+                        <MenuDivider />
+        
+                        <DropDownLink onClick={()=>setIsOpen(false)} to="/hosting">
+                            Manage Listings
+                        </DropDownLink>
+        
+                        <DropDownLink onClick={()=>setIsOpen(false)} to="/addListing">
+                            Add Listing
+                        </DropDownLink>
 
-                {
-                    this.state.showMenu
-                        ? (
-                            <DropDownContainer>
-
-                                <DropDownLink onClick={this.hideMenu} to="/bookings">My Reservations</DropDownLink>
-
-                                <MenuDivider />
-                
-                                <DropDownLink onClick={this.hideMenu} to="/hosting">Manage Listings</DropDownLink>
-                
-                                <DropDownLink onClick={this.hideMenu} to="/addListing">Add Listing</DropDownLink>
-
-                                <MenuDivider />
-                
-                                <DropDownLink as={"div"} onClick={this.props._handleLogout}>Log out</DropDownLink>
-                
-                            </DropDownContainer>
-                        )
-                        : (null)
-                }
-                
-            </StyledDropDown>
-        );
-    }
-
+                        <MenuDivider />
+        
+                        <DropDownLink as={"div"} onClick={props._handleLogout}>
+                            Log out
+                        </DropDownLink>
+        
+                    </DropDownContainer>
+                ) : (null)}
+            
+        </StyledDropDown>
+    );
 };
-
-export default NavDropDown;
