@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import NavDropDown from "./NavDropDown";
+import NavDatePicker from "./NavDatePicker";
 
 const StyledNavBar = styled.nav`
     height: 80px;
@@ -39,7 +40,8 @@ const StyledLink = styled(Link)`
 
 const NavBar = props => {
 
-    let { isAuthenticated, user, _handleLogout } = props;
+    const { user, _handleLogout } = props;
+    const isAuthenticated = user ? true : false;
 
     return (
         <StyledNavBar>
@@ -48,12 +50,16 @@ const NavBar = props => {
                 <p>Home</p>
             </StyledLink>
         
-            <StyledLink to="/browse">
+            {/* <StyledLink to="/browse">
                 <p>Browse</p>
-            </StyledLink>
+            </StyledLink> */}
+            <NavDatePicker/>
             
             {isAuthenticated
-                ? (<NavDropDown user={user} _handleLogout={_handleLogout} />)
+                ? (<NavDropDown
+                    user={ user }
+                    _handleLogout={_handleLogout}
+                    />)
                 : (<StyledLink to="/login">
                         <p>Log in</p>
                     </StyledLink>)}
