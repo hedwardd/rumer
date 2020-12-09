@@ -104,7 +104,6 @@ let ensureAuthenticated = (req, res, next) => {
 	if (req.isAuthenticated()) {
 		return next();
 	} else {
-		// console.log("Authentication failed.");
 		res.send("Authentication failed.");
 	}
 };
@@ -137,13 +136,55 @@ const postListing = (req, res) => {
 	}
 };
 
+const getListingsByAvailability = (req, res) => {
+	const { checkIn, checkOut } = req.query;
+	if ((checkIn || checkOut) && (!(checkIn && checkOut))) {
+		console.error("Query missing required parameter.");
+		res.send("Error: Query requires both checkIn and checkOut parameters.");
+	// TO-DO: Make sure valid dates can be parsed from query params
+	} else {
+		const checkInParam = new Date(parseInt(checkIn));
+		const checkOutParam = new Date(parseInt(checkOut));
+		// Get all future bookings
+		// NICE-TO-HAVE: Refactor to not query all future bookings
+		Booking.find(
+			{checkOut: {$gte: new Date()}},
+			(err, foundBookings) => {
+				if (err) {
+					console.error(err);
+					res.send("Error: Could not retrieve bookings.");
+				} else {
+					const desiredInterval = { start: checkInParam, end: checkOutParam };
+					// TO-DO: Refactor next two lines into one reduce method
+					const conflictingBookings = foundBookings.filter(eachBooking => areIntervalsOverlapping(
+						desiredInterval,
+						{ start: eachBooking.checkIn, end: eachBooking.checkOut }
+					));
+					const listingsToFilter = conflictingBookings.map(eachBooking => eachBooking._associatedListing);
+					Listing.find({ _id: { $nin: listingsToFilter } }, "-__v", (err, foundListings) => {
+						if (err) {
+							console.error(err);
+							res.send("Could not GET filtered listings");
+						} else {
+							res.json(foundListings);
+						}
+					});
+				}
+			});
+	}
+};
+
+
 const getListings = (req, res) => {
-	Listing.find({}, "-__v", (err, foundListings) => {
-		if (err) {
-			console.error(err);
-			res.send("Could not GET listings");
-		} else res.json(foundListings);
-	});
+	if (req.query.checkIn || req.query.checkOut) (getListingsByAvailability(req, res));
+	else {
+		Listing.find({}, "-__v", (err, foundListings) => {
+			if (err) {
+				console.error(err);
+				res.send("Could not GET listings");
+			} else res.json(foundListings);
+		});
+	}
 };
 
 const getListingById = (req, res) => {
