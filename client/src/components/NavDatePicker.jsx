@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { DateRangePicker } from "react-dates";
-import styled from "styled-components";
+import { Link } from "react-router-dom";
+// import styled from "styled-components";
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
@@ -8,6 +9,9 @@ export default function NavDatePicker () {
 
     const [dates, setDates] = useState({startDate: null, endDate: null});
     const [focusedInput, setFocusedInput] = useState(null);
+
+    const checkInParam = dates.startDate ? dates.startDate.format("x") : null;
+    const checkOutParam = dates.endDate ? dates.endDate.format("x") : null;
 
     return (
         <div>
@@ -23,7 +27,13 @@ export default function NavDatePicker () {
                 // isDayBlocked={this.isDayBlocked}
             />
 
-            <button onClick={()=>console.log(dates)}>Search</button>
+            <Link
+                to={(checkInParam && checkOutParam)
+                    ? `/browse?checkIn=${checkInParam}&checkOut=${checkOutParam}`
+                    : "/browse"}
+            >
+                Search
+            </Link>
 
         </div>
     )
