@@ -69,7 +69,6 @@ class BookingForm extends Component {
     }
     
     getBookedDates = (listingId) => {
-        console.log("listingId from props: " + listingId);
         fetch("/api/bookings/" + listingId, {
             credentials: "include",
             headers: {
@@ -140,8 +139,7 @@ class BookingForm extends Component {
     render() {
 
         const haveDatesLoaded = this.state.haveDatesLoaded;
-
-        console.log(this.state.bookedDates);
+        
         return (
             <StyledBookingForm>
 
