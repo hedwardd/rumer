@@ -51,7 +51,6 @@ const getListings = async () => {
 		}
 	});
 	const listingData = await response.json();
-	// console.log(listingData);
 	return listingData;
 }
 
@@ -65,8 +64,21 @@ const getBookings = async () => {
 		}
 	});
 	const listingData = await response.json();
-	// console.log(listingData);
 	return listingData;
+}
+
+const toggleIsListingArchived = async (listingId) => {
+	const response = await fetch(`/api/listings/${listingId}`, {
+		method: "PUT",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Credentials": true
+		}
+	});
+	const responseObject = await response.json();
+	console.log(responseObject);
+	return responseObject;
 }
 
 export default function HostDashboard({ user }) {
@@ -124,6 +136,15 @@ export default function HostDashboard({ user }) {
 									<StyledImg src={eachListing.photoURLs[0]} />
 
 									<p>{eachListing.title}</p>
+
+									<button
+										onClick={event=> {
+											event.preventDefault();
+											toggleIsListingArchived(eachListing._id);
+										}}
+									>
+										{eachListing.isArchived ? "Unarchive" : "Archive"}
+									</button>
 
 								</ListingContainer>
 							</StyledListItem>

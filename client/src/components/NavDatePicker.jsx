@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import { DateRangePicker } from "react-dates";
 import { Link } from "react-router-dom";
-// import styled from "styled-components";
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
+import styled from "styled-components";
+
+const SearchButton = styled.div`
+    background-color: #FF385C;
+    border-radius: 50%;
+    color: #FFFFFF;
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+    margin-left: 25px;
+`
 
 export default function NavDatePicker () {
 
@@ -27,13 +35,13 @@ export default function NavDatePicker () {
                 // isDayBlocked={this.isDayBlocked}
             />
 
-            <Link
+            <SearchButton as={Link}
                 to={(checkInParam && checkOutParam)
                     ? `/browse?checkIn=${checkInParam}&checkOut=${checkOutParam}`
                     : "/browse"}
             >
-                Search
-            </Link>
+                Go
+            </SearchButton>
 
         </div>
     )

@@ -27,7 +27,8 @@ const listingSchema = new Schema(
 			state: { type: String, lowercase: true, trim: true}// , minlength: 2, maxlength: 2 },
 		},
 		description: { type: String, trim: true },
-		_hostUser: { type: Schema.Types.ObjectId, required: true }
+		_hostUser: { type: Schema.Types.ObjectId, required: true },
+		isArchived: { type: Boolean }
 	}
 );
 const Listing = mongoose.model("Listing", listingSchema);

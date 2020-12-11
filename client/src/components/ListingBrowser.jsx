@@ -98,7 +98,7 @@ export default function ListingBrowser ({user}) {
 			) : (
 				// Otherwise, render a helpful message
 				<div>
-					<p>Loading...</p>
+					<p>No listings available.</p>
 				</div>
 			)}
 
