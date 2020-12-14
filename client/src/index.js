@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import { createGlobalStyle } from 'styled-components'
 import Montserrat from './fonts//Montserrat-Regular.ttf';
@@ -12,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
     src: url(${Montserrat});
   }
   body {
+    margin: 0;
     font-family: 'Montserrat', sans-serif;
     box-sizing: border-box;
   }
