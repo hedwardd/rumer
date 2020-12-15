@@ -347,7 +347,7 @@ const getBookingsByListing = (req, res) => {
 	}
 };
 
-const getBookingsForGuest = (req, res) => {
+const getBookingsByGuest = (req, res) => {
 	const _guestUser = req.user._id;
 	Booking.find(
 		{ _guestUser },
@@ -355,40 +355,12 @@ const getBookingsForGuest = (req, res) => {
 			if (err) {
 				console.error(err);
 				res.json({ error: "Could not get bookings" });
-			} else {
-				if (foundBookings.length === 0) {
-					res.json(foundBookings);
-				} else {
-					// Get IDs of Listings
-					const listingIds = foundBookings.map(eachBooking => eachBooking._associatedListing);
-					// Search for bookings by those IDs
-					Listing.find(
-						{ _id: { $in: listingIds } },
-						(err, foundListings) => {
-							if (err) {
-								console.error(err);
-								res.json({ error: "Could not get info for associated listings." });
-							} else {
-								// Update the array of bookings we're going to send back to include listing info with each booking
-								// First, create object with each listing's info
-								const listingInfoById = foundListings
-									.reduce((acc, curr) => acc[curr._id] ? acc : {...acc, [curr._id]: { title: curr.title, photoURLs: curr.photoURLs } }, {});
-								// Then, add listing title and photoURLs to each booking object
-								const bookingsWithListingInfo = foundBookings.map(booking => ({
-									...booking.toObject(),
-									listingInfo: listingInfoById[booking._associatedListing]
-								}));
-								res.json(bookingsWithListingInfo);
-							}
-						}
-					);
-				}
-			}
+			} else res.json(foundBookings);
 		}
 	);
 };
 
-const getBookingsForHost = (req, res) => {
+const getBookingsByHost = (req, res) => {
 	const _hostUser = req.user._id;
 	Listing.find(
 		{ _hostUser, isArchived: { $ne: true } },
@@ -398,7 +370,7 @@ const getBookingsForHost = (req, res) => {
 				res.json({ error: "Could not get listings" });
 			} else {
 				if (foundListings.length === 0) {
-					res.json(foundListings);
+					res.json({});
 				} else {
 					// Get IDs of Listings
 					const listingIds = foundListings.map(thisListing => thisListing._id);
@@ -409,31 +381,7 @@ const getBookingsForHost = (req, res) => {
 							if (err) {
 								console.error(err);
 								res.json({ error: "Could not get bookings" });
-							} else {
-								// Get the users associated with the IDs on those bookings
-								const guestUserIDs = foundBookings.map(booking => booking._guestUser);
-								User.find({ _id: guestUserIDs}, (err, foundGuestUsers) => {
-									if (err) {
-										console.error(err);
-										res.json({ error: "Could not get guest users." });
-									} else {
-										// Update the array of bookings we're going to send back to include usernames (instead of?) guest IDs
-										const guestUsernamesById = foundGuestUsers.reduce((acc, user) => {
-											if (acc[user._id]) return acc;
-											else {
-												acc[user._id] = user.username;
-												return acc;
-											}
-										}, {});
-										const bookingsWithUsernames = foundBookings.map(booking => {
-											const updatedBooking = booking.toObject();
-											updatedBooking["guestUsername"] = guestUsernamesById[booking._guestUser];
-											return updatedBooking;
-										});
-										res.json(bookingsWithUsernames);
-									}
-								});
-							}
+							} else res.json(foundBookings);
 						}
 					);
 				}
@@ -496,10 +444,10 @@ app.route("/api/bookings")
 	.post(ensureAuthenticated, postBooking);
 
 app.route("/api/myBookings")
-	.get(ensureAuthenticated, getBookingsForGuest);
+	.get(ensureAuthenticated, getBookingsByGuest);
 
 app.route("/api/host/bookings/")
-	.get(ensureAuthenticated, getBookingsForHost);
+	.get(ensureAuthenticated, getBookingsByHost);
 
 
 // The "catchall" handler: for any request that doesn't

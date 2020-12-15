@@ -1,7 +1,6 @@
 import React, { useState, useEffect} from 'react';
 // import { Link } from "react-router-dom";
 import styled from "styled-components";
-// import format from "date-fns/format"
 
 
 const StyledDashboard = styled.div`
@@ -29,15 +28,10 @@ const StyledList = styled.ul`
 
 const StyledListItem = styled.li`
 	list-style-type: none;
-	display: flex;
-	flex-direction: column;
-	// justify-content: space-between;
 `;
 
 const ListingContainer = styled.div`
-	width: 100%;
 	display: flex;
-	justify-content: space-between;
 `;
 
 // const StyledLink = styled(Link)`
@@ -88,30 +82,25 @@ const toggleIsListingArchived = async (listingId) => {
 }
 
 export default function HostDashboard({ user }) {
-
+	const userId = user._id;
 
 	const [listings, setListings] = useState([]);
 	useEffect(() => {
-		if (user) {
+		if (userId) {
 			async function fetchListingData() {
-				const listingData = await getListings();
+				const listingData = await getListings(userId);
 				setListings(listingData);
 			}
 			fetchListingData();
 		}
-	}, [user]);
+	}, [userId]);
 
 	const [bookings, setBookings] = useState([]);
 	useEffect(() => {
 		if (listings.length) {
-			const listingTitles = listings.reduce((acc, curr) => ({...acc, [curr._id]: curr.title}), {});
-			console.log(listingTitles);
-			listings.forEach(listing => listingTitles[listing._id] = listing.title);
 			async function fetchBookingData() {
 				const bookingData = await getBookings();
-				const bookingsWithTitles = bookingData.map(booking => ({...booking, listingTitle: listingTitles[booking._associatedListing]}));
-				console.log(bookingsWithTitles);
-				setBookings(bookingsWithTitles);
+				setBookings(bookingData);
 			}
 			fetchBookingData();
 		}
@@ -123,14 +112,13 @@ export default function HostDashboard({ user }) {
 			<h1>Dashboard</h1>
 
 			<StyledContainer>
-				<h2>Upcoming Reservations</h2>
+				<h2>Reservations</h2>
 				{bookings.length ? (
 					<StyledList>
 						{bookings.map(eachBooking => (
 							<StyledListItem key={eachBooking._id}>
-									<p>{new Date(eachBooking.checkIn).toLocaleDateString()} - {new Date(eachBooking.checkOut).toLocaleDateString()}</p>
-									<p>{eachBooking.listingTitle}</p>
-									<p>Reserved by: {eachBooking.guestUsername}</p>
+									<p>Check-in: {new Date(eachBooking.checkIn).toLocaleDateString()}</p>
+									<p>Check-out: {new Date(eachBooking.checkOut).toLocaleDateString()}</p>
 							</StyledListItem>
 						))}
 					</StyledList>

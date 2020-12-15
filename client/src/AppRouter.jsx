@@ -9,7 +9,7 @@ import ListingBrowser from "./components/ListingBrowser";
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 import HostDashboard from "./components/HostDashboard";
-import GuestDashboard from "./components/GuestDashboard";
+import BookingViewer from "./components/BookingViewer";
 import NavBar from "./components/NavBar";
 import ListingFullView from "./components/ListingFullView";
 
@@ -78,17 +78,18 @@ export default function AppRouter() {
 				</Route>
 
 				<Route path={"/listings/:listingId"}>
-					<ListingFullView user={ user} />
+					<ListingFullView user={user} />
 				</Route>
 
 				<Route path="/bookings">
 					{user
-						? (<GuestDashboard user={ user } />)
+						? (<BookingViewer />)
 						: ()=> window.open("/browse", "_self")}
 				</Route>
 
 				<Route path="/addListing">
 					{user
+						// TO-DO: Does this still need the user prop?
 						? (<ListingForm user={ user } />)
 						: ()=> window.open("/browse", "_self")}
 				</Route>
