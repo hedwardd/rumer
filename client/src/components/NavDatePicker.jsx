@@ -2,16 +2,23 @@ import React, { useState } from "react";
 import { DateRangePicker } from "react-dates";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { ReactComponent as SearchIcon } from "../search.svg";
 
 const SearchButton = styled.div`
-    background-color: #FF385C;
-    border-radius: 50%;
-    color: #FFFFFF;
-    padding: 10px;
-    width: 40px;
-    height: 40px;
-    margin-left: 25px;
+  background-color: #FF385C;
+  border-radius: 50%;
+  color: #FFFFFF;
+  padding: 10px;
+  width: 32px;
+  height: 32px;
+  margin-left: 25px;
 `
+
+const StyledSearchIcon = styled(SearchIcon)`
+  width: 12px;
+  height: 12px;
+  color: white;
+`;
 
 export default function NavDatePicker () {
 
@@ -32,15 +39,15 @@ export default function NavDatePicker () {
                 onDatesChange={({startDate, endDate}) => setDates({startDate, endDate})} // PropTypes.func.isRequired,
                 focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
                 onFocusChange={focusedInput => setFocusedInput(focusedInput)} // PropTypes.func.isRequired,
-                // isDayBlocked={this.isDayBlocked}
             />
 
-            <SearchButton as={Link}
-                to={(checkInParam && checkOutParam)
-                    ? `/browse?checkIn=${checkInParam}&checkOut=${checkOutParam}`
-                    : "/browse"}
+            <SearchButton 
+              as={Link}
+              to={(checkInParam && checkOutParam)
+                  ? `/browse?checkIn=${checkInParam}&checkOut=${checkOutParam}`
+                  : "/browse"}
             >
-                Go
+              <StyledSearchIcon />
             </SearchButton>
 
         </div>
