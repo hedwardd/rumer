@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
 
 const StyledListingBrowser = styled.div`
 	padding: 0px 80px;
 `;
 
-const StyledImg = styled.img`
-	width: 20vw;
-	height: 20vh;
+const ImageSection = styled.div`
+	width: 300px;
+	height: 200px;
 	border-radius: 1vw;
 `;
 
@@ -83,11 +85,20 @@ export default function ListingBrowser ({user}) {
 						<StyledListItem key={listing._id}>
 							<ListingContainer>
 
-							<StyledImg src={listing.photoURLs[0]} />
+								<ImageSection>
+									<ImageGallery
+										items={listing.photoURLs.map(url=>({original: url}))}
+										showThumbnails={false}
+										showPlayButton={false}
+										showFullscreenButton={false}
+										showBullets={listing.photoURLs.length > 1 ? true : false}
+										showNav={false}
+									/>
+								</ImageSection>
 
-							<StyledLink to={`/listings/${listing._id}`}>
-								{listing.title}
-							</StyledLink>
+								<StyledLink to={`/listings/${listing._id}`}>
+									{listing.title}
+								</StyledLink>
 
 							</ListingContainer>
 							<hr/>

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from "react-router";
 import BookingForm from "./BookingForm.jsx";
 import styled from "styled-components";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 
 const StyledListingFullView = styled.div`
 	width: 100%;
@@ -59,9 +61,7 @@ class ListingFullView extends Component {
 		const hasDataLoaded = Object.keys(this.state).length !== 0;
 		let images = null;
 		if (this.state.photoURLs) {
-			images = this.state.photoURLs.map(url => (
-			<img src={url} alt="A look at the listing."></img>
-			))
+			images = this.state.photoURLs.map(url => ({original: url}));
 		}
 
 		if (hasDataLoaded) return (
@@ -72,7 +72,12 @@ class ListingFullView extends Component {
 				</TitleSection>
 
 				<ImageSection>
-					{images}
+					<ImageGallery
+					 items={images}
+					 showThumbnails={false}
+					 showPlayButton={false}
+					 showBullets={images.length > 1 ? true : false}
+					/>
 				</ImageSection>
 
 				<DetailsSection>
