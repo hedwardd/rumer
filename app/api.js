@@ -138,6 +138,7 @@ const postListing = (req, res) => {
 
 const getListingsByAvailability = (req, res) => {
 	const { checkIn, checkOut } = req.query;
+	const userId = req.user ? req.user._id : null;
 	if ((checkIn || checkOut) && (!(checkIn && checkOut))) {
 		console.error("Query missing required parameter.");
 		res.json({ error: "Query requires both checkIn and checkOut parameters." });
@@ -161,7 +162,12 @@ const getListingsByAvailability = (req, res) => {
 						{ start: eachBooking.checkIn, end: eachBooking.checkOut }
 					));
 					const listingsToFilter = conflictingBookings.map(eachBooking => eachBooking._associatedListing);
-					Listing.find({ _id: { $nin: listingsToFilter }, isArchived: { $ne: true } },
+					Listing.find(
+						{
+							_id: { $nin: listingsToFilter },
+							isArchived: { $ne: true },
+							_hostUser: { $ne: userId }
+						},
 						"-__v",
 						(err, foundListings) => {
 							if (err) {
@@ -177,10 +183,14 @@ const getListingsByAvailability = (req, res) => {
 
 
 const getListings = (req, res) => {
+	const userId = req.user ? req.user._id : null;
 	if (req.query.checkIn || req.query.checkOut) (getListingsByAvailability(req, res));
 	else {
 		Listing.find(
-			{ isArchived: {$ne: true } },
+			{
+				isArchived: {$ne: true },
+				_hostUser: { $ne: userId }
+			},
 			"-__v",
 			(err, foundListings) => {
 				if (err) {
