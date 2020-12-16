@@ -65,44 +65,33 @@ const getBookedDates = async (listingId) => {
 	}
 }
 
-const handleSubmit = async (dates, listingId) => {
+const postBooking = async (dates, listingId) => {
 
-		// Otherwise, submit booking
-		// this.setState({ isSubmitting: true });
+  const bookingObject = {
+    checkIn: dates.checkIn,
+    checkOut: dates.checkOut,
+    _associatedListing: listingId 
+  };
 
-		const bookingObject = { 
-			checkIn: dates.checkIn,
-			checkOut: dates.checkOut,
-			_associatedListing: listingId 
-		};
-
-		const response  = await fetch("/api/bookings", { 
-			method: "POST",
-			body: JSON.stringify(bookingObject),
-			headers: {
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Credentials": true
-			} 
-		});
-		if (response.status !== 200) return null;
-		else {
-			const data = await response.json();
-			return data;
-		}
-	// 	!data.hasOwnProperty("error")
-	// 		? this.setState({ message: data.success })
-	// 		: this.setState({ message: data.error, isError: true });
-	// 	setTimeout(() => this.setState({
-	// 		checkIn: null,
-	// 		checkOut: null 
-	// 		}),
-	// 	1600
-	// 	);
-	// }
+  const response  = await fetch("/api/bookings", { 
+    method: "POST",
+    body: JSON.stringify(bookingObject),
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true
+    } 
+  });
+  if (response.status !== 200) return null;
+  else {
+    const data = await response.json();
+    return data;
+  }
 };
 
-// TO-DO: Update BookingForm to reflect loading, success/fail of submission
 export default function BookingForm ({user, listingId}) {
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+	const [message, setMessage] = useState("");
 
 	const [dates, setDates] = useState({checkIn: null, checkOut: null});
 	const [focusedInput, setFocusedInput] = useState(null);
@@ -118,26 +107,40 @@ export default function BookingForm ({user, listingId}) {
 		}
 	}, [user, listingId, bookedDates]);
 
-	const isDayBlocked = (day) => {
-		const dateOfDay = day._d;
+	const isDayBlocked = (thisDay) => {
+		const dateOfThisDay = thisDay._d;
 		return bookedDates.length === 0
 			? false
-			: !bookedDates.every(bookedInterval => !isWithinInterval(dateOfDay, bookedInterval));
+			: !bookedDates.every(bookedInterval => !isWithinInterval(dateOfThisDay, bookedInterval));
+	}
 
+	const handleSubmit = async event => {
+		event.preventDefault();
+		if (!user) window.open("/login", "_self");
+		else {
+			setIsSubmitting(true);
+			const result = await postBooking(dates, listingId);
+			setIsSubmitting(false);
+			if (result.error) setMessage(result.error);
+			else if (result) {
+				setMessage("Your reservation was successful!");
+				setTimeout(()=> {
+					setMessage("");
+					setDates({checkIn: null, checkOut: null});
+				}, 3000);
+			} else {
+        setMessage("Something went wrong.  Please try again.");
+				setTimeout(()=> {
+					setMessage("");
+				}, 3000);
+      }
+		}
 	}
 		
 	return (
 		<StyledBookingForm>
 
-			<form
-				onSubmit={event => {
-						event.preventDefault();
-						user
-							? handleSubmit(dates, listingId)
-							: window.open("/login", "_self")
-					}
-				}
-			>
+      <form onSubmit={e=>handleSubmit(e)} >
 
 				<DateInputContainer>
 
@@ -165,6 +168,10 @@ export default function BookingForm ({user, listingId}) {
 					type="submit"
 					value="Reserve"
 				/>
+
+				<p>{isSubmitting ? "Submitting..." : ""}</p>
+
+				<p>{message.length ? message : ""}</p>
 
 			</form>
 			

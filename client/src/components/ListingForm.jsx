@@ -57,7 +57,18 @@ const StyledButton = styled.button`
 	text-align: center;
 `;
 
-const handleSubmit = async (listingData) => {
+const InitialState = {
+	title: "",
+	photoURLs: [],
+	street1: "",
+	street2: "",
+	city: "",
+	zip: "",
+	state: "",
+	description: ""
+}
+
+const postListing = async (listingData) => {
 
 	const response = await fetch("/api/listings", {
 		method: "POST",
@@ -70,28 +81,16 @@ const handleSubmit = async (listingData) => {
 	if (response.status !== 200) return null;
 	else {
 		const responseData = await response.json();
-		console.log(responseData);
 		return responseData;
-		// !data.hasOwnProperty("error")
-		// ? this.setState({ message: data.success })
-		// : this.setState({ message: data.error, isError: true });
 	}
 };
 
-// TO-DO: Update BookingForm to reflect loading, success/fail of submission
-// TO-DO: Update file picker to be able to upload multiple files
 export default function ListingForm ({user}) {
 
-	const [formValues, setFormValues] = useState({
-		title: "",
-		photoURLs: [],
-		street1: "",
-		street2: "",
-		city: "",
-		zip: "",
-		state: "",
-		description: ""
-	})
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [message, setMessage] = useState("");
+
+	const [formValues, setFormValues] = useState(InitialState)
 
 	const handleChange = event => {
 		const updatedValue = event.target.value;
@@ -117,15 +116,30 @@ export default function ListingForm ({user}) {
 		}
 	}
 
+	const handleSubmit = async event => {
+		event.preventDefault();
+		setIsSubmitting(true);
+		const result = await postListing(formValues);
+		setIsSubmitting(false);
+		if (result.error) setMessage(result.error);
+		else if (result) {
+			setMessage("Your listing was successfully added!");
+			setTimeout(()=> {
+				setMessage("");
+				setFormValues(InitialState);
+			}, 3000);
+		} else {
+			setMessage("Something went wrong.  Please try again.");
+			setTimeout(()=> {
+				setMessage("");
+			}, 3000);
+      }
+	}
+
     return (
 		<StyledListingForm>
 			
-			<StyledForm
-				onSubmit={event => {
-					event.preventDefault();
-					handleSubmit(formValues);
-				}}
-			>
+			<StyledForm onSubmit={event => handleSubmit(event)} >
 
 				<h1>Add a Listing</h1>
 
@@ -263,11 +277,11 @@ export default function ListingForm ({user}) {
 					/>
 				</FormSection>
 
-			</StyledForm>
+				<p>{isSubmitting ? "Submitting..." : ""}</p>
 
-			{/* <div className={`message ${this.state.isError && "error"}`}>
-				{this.state.isSubmitting ? "Submitting..." : this.state.message}
-			</div> */}
+				<p>{message.length ? message : ""}</p>
+
+			</StyledForm>
 
 		</StyledListingForm>
     );

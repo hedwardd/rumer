@@ -1,105 +1,80 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // NICE-TO-HAVE: If user is already logged in, this page should not render
-class LoginForm extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        username: "",
-        password: "",
-        isSubmitting: false
-      };
-  
-      this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
-    }
+export default function LoginForm ({loginHandler}) {
 
-    handleChange = event => {
-        const value = event.target.value;
-        const name = event.target.name;
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+	const [message, setMessage] = useState("");
     
-        this.setState({
-            ...this.state, 
-            [name]: value
-        });
-    }
-    
-    handleSubmit = async event => {
+    const handleSubmit = async event => {
         event.preventDefault();
-        this.setState({ isSubmitting: true });
-
-        const userObject = { 
-            username: this.state.username,
-            password: this.state.password
-        };
-
+        console.log(username);
+        console.log(password);
+        setIsSubmitting(true);
+        setMessage("");
         const res = await fetch("/api/login", { 
             method: "POST",
-            body: JSON.stringify(userObject),
+            body: JSON.stringify({ username: username, password: password }),
             headers: { "Content-Type": "application/json" } 
         });
-        this.setState({ isSubmitting: false });
-        if (res.status === 401) this.setState({
-            password: "",
-            message: "The credentials you entered are invalid. Please try again." 
-        })
-        else {
+        setIsSubmitting(false);
+        if (res.status === 401) {
+            setPassword("");
+            setMessage("The credentials you entered are invalid. Please try again."); 
+        } else {
             const data = await res.json();
-            data.hasOwnProperty("error")
-                ? this.setState({ message: data.error })
-                : this.setState({ message: data.success });
-            setTimeout(() => {
-                this.props.loginHandler(data.user);
-                window.open("/browse", "_self");
-            }, 1600);
+            if (data.hasOwnProperty("error")) setMessage(data.error);
+            else {
+                setMessage(data.success);
+                setTimeout(() => {
+                    loginHandler(data.user);
+                    window.open("/browse", "_self");
+                }, 2000);
+            }
         }
-    };
+	}
 
-    render() {
-        return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <h2>Log in</h2>
+    return (
+        <div>
+            <form onSubmit={event=>handleSubmit(event)}>
+                <h2>Log in</h2>
 
-                    <label>
-                        Username
-                        <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        onChange={this.handleChange}
-                        value={this.state.username}
-                        />
-                    </label>
-
-                    <label>
-                        Password
-                        <input
-                        type="password"
-                        name="password"
-                        onChange={this.handleChange}
-                        value={this.state.password}
-                        />
-                    </label>
-
+                <label>
+                    Username
                     <input
-                        type="submit"
-                        value="Submit"
+                    type="text"
+                    id="username"
+                    name="username"
+                    onChange={event => setUsername(event.target.value)}
+                    value={username}
                     />
+                </label>
 
-                </form>
+                <label>
+                    Password
+                    <input
+                    type="password"
+                    name="password"
+                    onChange={event => setPassword(event.target.value)}
+                    value={password}
+                    />
+                </label>
 
-                <div>
-                    {this.state.isSubmitting ? "Submitting..." : this.state.message}
-                </div>
+                <input
+                    type="submit"
+                    value="Submit"
+                />
 
-                <p>Don't have an account? <Link to={'/signup'}>Create one</Link>.</p>
+            </form>
+
+            <div>
+                {isSubmitting ? "Submitting..." : message}
             </div>
-        )
-    }
 
-  
+            <p>Don't have an account? <Link to={'/signup'}>Create one</Link>.</p>
+        </div>
+    )
 }
-
-export default LoginForm;
