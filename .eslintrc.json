@@ -1,4 +1,5 @@
 {
+    "root": true,
     "env": {
         "browser": true,
         "node": true,
@@ -7,36 +8,24 @@
         "jest/globals": true
     },
     "extends": [
+        "airbnb",
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:jest/recommended"
+        "plugin:jest/recommended",
+        "plugin:node/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 12
+        "ecmaVersion": 2020
     },
     "plugins": [
         "react",
-        "jest"
+        "jest",
+        "node"
     ],
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
+        "no-underscore-dangle": "off"
     }
 }
