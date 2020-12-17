@@ -1,71 +1,74 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import NavDropDown from "./NavDropDown";
-import NavDatePicker from "./NavDatePicker";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import NavDropDown from './NavDropDown';
+import NavDatePicker from './NavDatePicker';
 
 const StyledNavBar = styled.nav`
-    height: 80px;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 12px;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 2vw;
+  height: 80px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 12px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 2vw;
 `;
 
 const StyledLink = styled(Link)`
-    text-decoration: none;
-    color: black;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    box-sizing: border-box;
-    min-width: 5vw;
-    height: 42px;
-    font-size: 14px;
-    padding: 5px 10px;
-    position: relative;
-    vertical-align: middle;
-    border-radius: 10px;
-    background-color: white;
-    border: 1px solid #DDDDDD;
-    border-radius: 21px;
-    z-index: 1;
-    &:hover {
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    }
+  text-decoration: none;
+  color: black;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  min-width: 5vw;
+  height: 42px;
+  font-size: 14px;
+  padding: 5px 10px;
+  position: relative;
+  vertical-align: middle;
+  border-radius: 10px;
+  background-color: white;
+  border: 1px solid #DDDDDD;
+  border-radius: 21px;
+  z-index: 1;
+  &:hover {
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  }
 `;
 
-const NavBar = props => {
+const NavBar = (props) => {
+  const { user, _handleLogout } = props;
+  const isAuthenticated = !!user;
 
-    const { user, _handleLogout } = props;
-    const isAuthenticated = user ? true : false;
+  return (
+    <StyledNavBar>
 
-    return (
-        <StyledNavBar>
+      <StyledLink to="/">
+        <p>Home</p>
+      </StyledLink>
 
-            <StyledLink to="/">
-                <p>Home</p>
-            </StyledLink>
-        
-            {/* <StyledLink to="/browse">
+      {/* <StyledLink to="/browse">
                 <p>Browse</p>
             </StyledLink> */}
-            <NavDatePicker/>
-            
-            {isAuthenticated
-                ? (<NavDropDown
-                    user={ user }
-                    _handleLogout={_handleLogout}
-                    />)
-                : (<StyledLink to="/login">
-                        <p>Log in</p>
-                    </StyledLink>)}
-            
-        </StyledNavBar>
-    );
+      <NavDatePicker />
+
+      {isAuthenticated
+        ? (
+          <NavDropDown
+            user={user}
+            _handleLogout={_handleLogout}
+          />
+        )
+        : (
+          <StyledLink to="/login">
+            <p>Log in</p>
+          </StyledLink>
+        )}
+
+    </StyledNavBar>
+  );
 };
 
 export default NavBar;

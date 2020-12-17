@@ -77,7 +77,6 @@ const registerNewUser = (req, res) => {
       console.error(errFindingUser);
       res.json({ error: 'There was an error checking for existing users.' });
     } else if (foundUser) {
-      console.log('Existing user found.');
       res.json({ error: 'There is already a user with that username.' });
     } else {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);

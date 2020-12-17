@@ -11,8 +11,7 @@
         "airbnb",
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:jest/recommended",
-        "plugin:node/recommended"
+        "plugin:jest/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -22,10 +21,10 @@
     },
     "plugins": [
         "react",
-        "jest",
-        "node"
+        "jest"
     ],
     "rules": {
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "react/prop-types": "off"
     }
 }

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { DateRangePicker } from "react-dates";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { ReactComponent as SearchIcon } from "../search.svg";
+import React, { useState } from 'react';
+import { DateRangePicker } from 'react-dates';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { ReactComponent as SearchIcon } from '../search.svg';
 
 const SearchButton = styled.div`
   background-color: #FF385C;
@@ -12,7 +12,7 @@ const SearchButton = styled.div`
   width: 32px;
   height: 32px;
   margin-left: 25px;
-`
+`;
 
 const StyledSearchIcon = styled(SearchIcon)`
   width: 12px;
@@ -20,37 +20,35 @@ const StyledSearchIcon = styled(SearchIcon)`
   color: white;
 `;
 
-export default function NavDatePicker () {
+export default function NavDatePicker() {
+  const [dates, setDates] = useState({ startDate: null, endDate: null });
+  const [focusedInput, setFocusedInput] = useState(null);
 
-    const [dates, setDates] = useState({startDate: null, endDate: null});
-    const [focusedInput, setFocusedInput] = useState(null);
+  const checkInParam = dates.startDate ? dates.startDate.format('x') : null;
+  const checkOutParam = dates.endDate ? dates.endDate.format('x') : null;
 
-    const checkInParam = dates.startDate ? dates.startDate.format("x") : null;
-    const checkOutParam = dates.endDate ? dates.endDate.format("x") : null;
+  return (
+    <div>
+      <DateRangePicker
+        required
+        startDate={dates.startDate} // momentPropTypes.momentObj or null,
+        startDateId="nav_date_picker_start" // PropTypes.string.isRequired,
+        endDate={dates.endDate} // momentPropTypes.momentObj or null,
+        endDateId="nav_date_picker_end" // PropTypes.string.isRequired,
+        onDatesChange={setDates} // PropTypes.func.isRequired,
+        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+        onFocusChange={setFocusedInput}
+      />
 
-    return (
-        <div>
-            <DateRangePicker
-                required
-                startDate={dates.startDate} // momentPropTypes.momentObj or null,
-                startDateId="nav_date_picker_start" // PropTypes.string.isRequired,
-                endDate={dates.endDate} // momentPropTypes.momentObj or null,
-                endDateId="nav_date_picker_end" // PropTypes.string.isRequired,
-                onDatesChange={({startDate, endDate}) => setDates({startDate, endDate})} // PropTypes.func.isRequired,
-                focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                onFocusChange={focusedInput => setFocusedInput(focusedInput)} // PropTypes.func.isRequired,
-            />
+      <SearchButton
+        as={Link}
+        to={(checkInParam && checkOutParam)
+          ? `/browse?checkIn=${checkInParam}&checkOut=${checkOutParam}`
+          : '/browse'}
+      >
+        <StyledSearchIcon />
+      </SearchButton>
 
-            <SearchButton 
-              as={Link}
-              to={(checkInParam && checkOutParam)
-                  ? `/browse?checkIn=${checkInParam}&checkOut=${checkOutParam}`
-                  : "/browse"}
-            >
-              <StyledSearchIcon />
-            </SearchButton>
-
-        </div>
-    )
-
+    </div>
+  );
 }

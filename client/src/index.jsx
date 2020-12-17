@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createGlobalStyle } from 'styled-components';
 import App from './App';
-import { createGlobalStyle } from 'styled-components'
-import Montserrat from './fonts//Montserrat-Regular.ttf';
+import Montserrat from './fonts/Montserrat-Regular.ttf';
 import reportWebVitals from './reportWebVitals';
 
 const GlobalStyle = createGlobalStyle`
@@ -21,14 +21,14 @@ const GlobalStyle = createGlobalStyle`
   button {
     font-family: 'Montserrat', sans-serif;
   }
-`
+`;
 
 ReactDOM.render(
   <React.StrictMode>
     <GlobalStyle />
     <App />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
