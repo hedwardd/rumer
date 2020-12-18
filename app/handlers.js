@@ -1,76 +1,8 @@
 /* eslint-disable no-console */
-/**
- * Libraries
- */
-const express = require('express');
-const cors = require('cors');
-const session = require('express-session');
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const path = require('path');
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
 const areIntervalsOverlapping = require('date-fns/areIntervalsOverlapping');
+const bcrypt = require('bcrypt');
 const { User, Listing, Booking } = require('./models.js');
 
-/**
- * Declarations
- */
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    User.findOne(
-      { username },
-      async (err, user) => {
-        // console.log("User " + username + " attempted to log in.");
-        if (err) {
-          console.error(err);
-          return done(err);
-        }
-        if (!user) {
-          // console.log("No such user found.");
-          return done(null, false);
-        }
-        if (!await bcrypt.compare(password, user.password)) {
-          // console.log("Password is incorrect.");
-          return done(null, false);
-        }
-        // console.log("User has been authenticated.");
-        return done(null, user);
-      },
-    );
-  }),
-);
-
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-
-passport.deserializeUser((id, done) => {
-  User.findOne(
-    { _id: id },
-    '-password',
-    (err, foundUser) => {
-      done(null, foundUser);
-    },
-  );
-});
-
-const app = express();
-app.use(cors());
-app.use(bodyParser.json());
-
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-/**
- * Route Handlers
- */
 const registerNewUser = (req, res) => {
   User.findOne({ username: req.body.username }, async (errFindingUser, foundUser) => {
     if (errFindingUser) {
@@ -307,7 +239,7 @@ const postBooking = (req, res) => {
                     start: new Date(booking.checkIn),
                     end: new Date(booking.checkOut),
                   }));
-                // Next, check each to our proposed interval
+                  // Next, check each to our proposed interval
                 if (otherBookingIntervals.every(
                   (eachInterval) => !areIntervalsOverlapping(eachInterval, thisBookingInterval),
                 )) {
@@ -387,7 +319,7 @@ const getBookingsForGuest = (req, res) => {
                     },
                   }
                 ), {});
-              // Then, add listing title and photoURLs to each booking object
+                // Then, add listing title and photoURLs to each booking object
               const bookingsWithListingInfo = foundBookings.map((booking) => ({
                 ...booking.toObject(),
                 listingInfo: listingInfoById[booking._associatedListing],
@@ -451,69 +383,16 @@ const getBookingsForHost = (req, res) => {
   );
 };
 
-/**
- * Routes
- */
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client/build')));
-
-// Put all API endpoints under '/api'
-app.route('/api/login')
-  .post(passport.authenticate('local'), (req, res) => {
-    res.json({
-      success: 'Welcome back!',
-      user: req.user,
-    });
-  });
-
-app.route('/api/auth')
-  .get(ensureAuthenticated, (req, res) => {
-    if (req.user) {
-      res.json({
-        success: true,
-        message: 'User has successfully authenticated',
-        user: req.user,
-        cookies: req.cookies,
-      });
-    }
-  });
-
-app.route('/api/logout')
-  .get((req, res) => {
-    req.logout();
-    res.redirect('/');
-  });
-
-app.route('/api/user')
-  .post(registerNewUser);
-
-app.route('/api/listings')
-  .get(getListings)
-  .post(ensureAuthenticated, postListing);
-
-app.route('/api/listings/:listingId')
-  .get(getListingById)
-  .put(ensureAuthenticated, toggleListingArchival);
-
-app.route('/api/host/listings/')
-  .get(ensureAuthenticated, getListingsByHost);
-
-app.route('/api/bookings/:listingId')
-  .get(getBookingsByListing);
-
-app.route('/api/bookings')
-  .post(ensureAuthenticated, postBooking);
-
-app.route('/api/myBookings')
-  .get(ensureAuthenticated, getBookingsForGuest);
-
-app.route('/api/host/bookings/')
-  .get(ensureAuthenticated, getBookingsForHost);
-
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
-
-module.exports = app;
+module.exports = {
+  registerNewUser,
+  ensureAuthenticated,
+  postListing,
+  getListings,
+  getListingById,
+  getListingsByHost,
+  toggleListingArchival,
+  postBooking,
+  getBookingsByListing,
+  getBookingsForGuest,
+  getBookingsForHost,
+};
