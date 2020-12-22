@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import { createGlobalStyle } from 'styled-components';
 import App from './App';
 import Montserrat from './fonts/Montserrat-Regular.ttf';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+import 'react-image-gallery/styles/css/image-gallery.css';
 import reportWebVitals from './reportWebVitals';
 
 const GlobalStyle = createGlobalStyle`
@@ -13,10 +16,10 @@ const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
-    box-sizing: border-box;
   }
   input {
     font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
   }
   button {
     font-family: 'Montserrat', sans-serif;
