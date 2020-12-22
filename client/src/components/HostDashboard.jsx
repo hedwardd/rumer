@@ -38,8 +38,8 @@ const ListingContainer = styled.div`
   justify-content: space-between;
 `;
 
-const getListings = async () => {
-  const response = await fetch('/api/host/listings/', {
+const fetchHostData = async (param) => {
+  const response = await fetch(`/api/host/${param}`, {
     credentials: 'include',
     headers: {
       Accept: 'application/json',
@@ -47,21 +47,8 @@ const getListings = async () => {
       'Access-Control-Allow-Credentials': true,
     },
   });
-  const listingData = await response.json();
-  return listingData;
-};
-
-const getBookings = async () => {
-  const response = await fetch('/api/host/bookings/', {
-    credentials: 'include',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Credentials': true,
-    },
-  });
-  const listingData = await response.json();
-  return listingData;
+  const data = await response.json();
+  return data;
 };
 
 const toggleIsListingArchived = async (listingId) => {
@@ -79,46 +66,54 @@ const toggleIsListingArchived = async (listingId) => {
 
 const ReservationsList = ({ bookings }) => (bookings.length ? (
   <StyledList>
-    {bookings.map((eachBooking) => (
-      <StyledListItem key={eachBooking._id}>
-        <p>
-          {new Date(eachBooking.checkIn).toLocaleDateString()}
-          -
-          {new Date(eachBooking.checkOut).toLocaleDateString()}
-        </p>
-        <p>{eachBooking.listingTitle}</p>
-        <p>
-          Reserved by:
-          {' '}
-          {eachBooking.guestUsername}
-        </p>
-      </StyledListItem>
-    ))}
+    {bookings
+      .filter((eachBooking) => new Date(eachBooking.checkOut) > new Date())
+      .map((eachBooking) => (
+        <StyledListItem key={eachBooking._id}>
+          <p>
+            {new Date(eachBooking.checkIn).toLocaleDateString()}
+            -
+            {new Date(eachBooking.checkOut).toLocaleDateString()}
+          </p>
+          <p>{eachBooking.listingTitle}</p>
+          <p>
+            Reserved by:
+            {' '}
+            {eachBooking.guestUsername}
+          </p>
+        </StyledListItem>
+      ))}
   </StyledList>
 ) : 'No reservations to show.');
 
 export default function HostDashboard({ user }) {
   const [listings, setListings] = useState([]);
+  const [areListingsLoading, setAreListingsLoading] = useState(false);
   useEffect(() => {
     async function fetchListingData() {
-      const listingData = await getListings();
+      setAreListingsLoading(true);
+      const listingData = await fetchHostData('listings/');
       setListings(listingData);
+      setAreListingsLoading(false);
     }
     if (user) fetchListingData();
   }, [user]);
 
-  const [bookings, setBookings] = useState(null);
+  const [bookings, setBookings] = useState([]);
+  const [areBookingsLoading, setAreBookingsLoading] = useState(false);
   useEffect(() => {
     async function fetchBookingData() {
+      setAreBookingsLoading(true);
       const listingTitles = listings
         .reduce((acc, curr) => ({ ...acc, [curr._id]: curr.title }), {});
-      const bookingData = await getBookings();
+      const bookingData = await fetchHostData('bookings/');
       const bookingsWithTitles = bookingData
         .map((booking) => ({
           ...booking,
           listingTitle: listingTitles[booking._associatedListing],
         }));
       setBookings(bookingsWithTitles);
+      setAreBookingsLoading(false);
     }
     if (listings.length) fetchBookingData();
   }, [listings]);
@@ -136,15 +131,19 @@ export default function HostDashboard({ user }) {
       <StyledContainer>
         <h2>Upcoming Reservations on Your Listings</h2>
 
-        {bookings
-          ? <ReservationsList bookings={bookings} />
-          : 'Loading...'}
+        {areBookingsLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <ReservationsList bookings={bookings} />
+        )}
       </StyledContainer>
 
       <StyledContainer>
         <h2>Your Listings</h2>
 
-        {listings.length ? (
+        {areListingsLoading ? (
+          <div>Loading...</div>
+        ) : (
           <StyledList>
             {listings.map((eachListing) => (
               <StyledListItem key={eachListing._id}>
@@ -167,7 +166,7 @@ export default function HostDashboard({ user }) {
               </StyledListItem>
             ))}
           </StyledList>
-        ) : null}
+        )}
       </StyledContainer>
 
     </StyledDashboard>

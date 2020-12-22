@@ -70,11 +70,14 @@ export default function ListingBrowser() {
   const query = useQuery();
   const checkInParam = query.get('checkIn');
   const checkOutParam = query.get('checkOut');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [listings, setListings] = useState(null);
+  const [listings, setListings] = useState([]);
   useEffect(() => {
     async function fetchListingsData() {
+      setIsLoading(true);
       const listingsData = await getListings(checkInParam, checkOutParam);
+      setIsLoading(false);
       if (listingsData) setListings(listingsData);
     }
     fetchListingsData();
@@ -84,7 +87,9 @@ export default function ListingBrowser() {
     <StyledListingBrowser>
       <h1>Listings</h1>
 
-      {listings ? (
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
         <div>
           <p>
             {listings.length}
@@ -124,11 +129,6 @@ export default function ListingBrowser() {
             ))}
 
           </StyledUnorderedList>
-        </div>
-      ) : (
-        // Otherwise, render a helpful message
-        <div>
-          <p>No listings available.</p>
         </div>
       )}
 

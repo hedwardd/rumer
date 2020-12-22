@@ -68,11 +68,14 @@ const ReservationsList = ({ bookings }) => (bookings.length ? (
 ) : 'No reservations to show.');
 
 export default function GuestDashboard({ user }) {
-  const [bookings, setBookings] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [bookings, setBookings] = useState([]);
   useEffect(() => {
     async function fetchBookingData() {
+      setIsLoading(true);
       const bookingData = await getBookings();
       setBookings(bookingData);
+      setIsLoading(false);
     }
     if (user) fetchBookingData();
   }, [user]);
@@ -83,9 +86,11 @@ export default function GuestDashboard({ user }) {
 
       <StyledContainer>
         <h2>Upcoming Reservations</h2>
-        {bookings
-          ? <ReservationsList bookings={bookings} />
-          : 'Loading'}
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <ReservationsList bookings={bookings} />
+        )}
       </StyledContainer>
     </StyledDashboard>
   );
