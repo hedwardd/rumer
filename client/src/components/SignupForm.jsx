@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-
-const StyledLabel = styled.label`
-  margin-bottom: 4px;
-  padding-bottom: 8px;
-  padding-top: 9px;
-`;
+import {
+  StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink,
+} from './styles/AuthFormStyles';
 
 export default function SignupForm() {
   const [username, setUsername] = useState('');
@@ -35,48 +31,55 @@ export default function SignupForm() {
   };
 
   return (
-    <div>
-      <form onSubmit={(event) => handleSubmit(event)}>
-        <h2>Sign up</h2>
+    <StyledAuthForm
+      onSubmit={(event) => handleSubmit(event)}
+    >
+      <h2>Sign up</h2>
 
+      <StyledFormSection>
         <StyledLabel>
           Username
-          <input
-            type="text"
-            id="username"
-            name="username"
-            onChange={(event) => setUsername(event.target.value)}
-            value={username}
-          />
         </StyledLabel>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          onChange={(event) => setUsername(event.target.value)}
+          value={username}
+        />
+      </StyledFormSection>
 
+      <StyledFormSection>
         <StyledLabel>
           Password
-          <input
-            type="password"
-            name="password"
-            onChange={(event) => setPassword(event.target.value)}
-            value={password}
-          />
         </StyledLabel>
-
         <input
-          type="submit"
-          value="Submit"
+          type="password"
+          name="password"
+          onChange={(event) => setPassword(event.target.value)}
+          value={password}
         />
+      </StyledFormSection>
 
-      </form>
+      <StyledFormSection>
+        <StyledButton
+          as="input"
+          type="submit"
+          value="Log in"
+        />
+      </StyledFormSection>
 
-      <div>
+      <StyledFormSection>
+        <p>
+          Already have an account?
+          {' '}
+          <StyledLink as={Link} to="/login">Log in</StyledLink>
+        </p>
+      </StyledFormSection>
+
+      <StyledFormSection>
         {isSubmitting ? 'Submitting...' : message}
-      </div>
-
-      <p>
-        Already have an account?
-        {' '}
-        <Link to="/login">Log in</Link>
-        .
-      </p>
-    </div>
+      </StyledFormSection>
+    </StyledAuthForm>
   );
 }

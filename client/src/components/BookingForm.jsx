@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { DateRangePicker } from 'react-dates';
 import styled from 'styled-components';
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
 import isWithinInterval from 'date-fns/isWithinInterval';
 
-const StyledBookingForm = styled.div`
-  width: 33.33%;
+const StyledBookingForm = styled.form`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   border: 1px solid #DDDDDD;
   border-radius: 12px;
   border-radius: 12px;
@@ -18,9 +18,14 @@ const StyledBookingForm = styled.div`
   quotes: auto;
 `;
 
-const DateInputContainer = styled.div`
+const FormContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+`;
+
+const StyledDateRangePicker = styled(DateRangePicker)`
+  width: 100%;
 `;
 
 const ReserveButton = styled.input`
@@ -34,14 +39,12 @@ const ReserveButton = styled.input`
   font-size: 16px;
   font-weight: 600;
   line-height: 20px;
-  margin: 0;
+  margin-top: 15px;
   outline: none;
   padding: 14px 24px;
   position: relative;
   quotes: auto;
   text-align: center;
-  text-decoration: none;
-  touch-action: manipulation;
   width: 100%;
   &:active {
     background-color: #FF385C; transform: scale(.96);
@@ -135,43 +138,40 @@ export default function BookingForm({ user, listingId }) {
   };
 
   return (
-    <StyledBookingForm>
 
-      <form onSubmit={(e) => handleSubmit(e)}>
+    <StyledBookingForm onSubmit={(e) => handleSubmit(e)}>
 
-        <DateInputContainer>
+      { bookedDates ? (
+        <FormContentWrapper>
+          <StyledDateRangePicker
+            required
+            startDate={dates.checkIn} // momentPropTypes.momentObj or null,
+            startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+            endDate={dates.checkOut} // momentPropTypes.momentObj or null,
+            endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+            onDatesChange={({ startDate, endDate }) => setDates({
+              checkIn: startDate,
+              checkOut: endDate,
+            })} // PropTypes.func.isRequired,
+            focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+            onFocusChange={(input) => setFocusedInput(input)} // PropTypes.func.isRequired,
+            isDayBlocked={isDayBlocked}
+          />
 
-          { bookedDates ? (
-            <DateRangePicker
-              required
-              startDate={dates.checkIn} // momentPropTypes.momentObj or null,
-              startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
-              endDate={dates.checkOut} // momentPropTypes.momentObj or null,
-              endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
-              onDatesChange={({ startDate, endDate }) => setDates({
-                checkIn: startDate,
-                checkOut: endDate,
-              })} // PropTypes.func.isRequired,
-              focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-              onFocusChange={(input) => setFocusedInput(input)} // PropTypes.func.isRequired,
-              isDayBlocked={isDayBlocked}
-            />
+          <ReserveButton
+            type="submit"
+            value="Reserve"
+          />
 
-          ) : null }
+        </FormContentWrapper>
 
-        </DateInputContainer>
+      ) : null }
 
-        <ReserveButton
-          type="submit"
-          value="Reserve"
-        />
+      <p>{isSubmitting ? 'Submitting...' : ''}</p>
 
-        <p>{isSubmitting ? 'Submitting...' : ''}</p>
-
-        <p>{message.length ? message : ''}</p>
-
-      </form>
+      <p>{message.length ? message : ''}</p>
 
     </StyledBookingForm>
+
   );
 }

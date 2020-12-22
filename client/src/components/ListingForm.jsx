@@ -7,12 +7,7 @@ const FilePickerOptions = {
   maxFiles: 3,
 };
 
-const StyledListingForm = styled.div`
-  // background-color: #FAFAFA;
-  // top: 0;
-`;
-
-const StyledForm = styled.form`
+const StyledListingForm = styled.form`
   margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
@@ -127,151 +122,147 @@ export default function ListingForm() {
   };
 
   return (
-    <StyledListingForm>
+    <StyledListingForm onSubmit={(event) => handleSubmit(event)}>
 
-      <StyledForm onSubmit={(event) => handleSubmit(event)}>
+      <h1>Add a Listing</h1>
 
-        <h1>Add a Listing</h1>
+      <FormSection>
+        <StyledLabel>
+          Title
+        </StyledLabel>
 
-        <FormSection>
-          <StyledLabel>
-            Title
-          </StyledLabel>
+        <input
+          type="text"
+          required
+          id="title"
+          name="title"
+          label="Title"
+          value={formValues.title}
+          onChange={(event) => handleChange(event)}
+        />
+      </FormSection>
 
-          <input
-            type="text"
-            required
-            id="title"
-            name="title"
-            label="Title"
-            value={formValues.title}
-            onChange={(event) => handleChange(event)}
-          />
-        </FormSection>
+      <FormSection>
+        <StyledLabel>
+          Address line 1
+        </StyledLabel>
+        <input
+          type="text"
+          // required
+          id="street1"
+          name="street1"
+          label="Address line 1"
+          value={formValues.street1}
+          onChange={(event) => handleChange(event)}
+          autoComplete="shipping address-line1"
+        />
+      </FormSection>
 
-        <FormSection>
-          <StyledLabel>
-            Address line 1
-          </StyledLabel>
-          <input
-            type="text"
-            // required
-            id="street1"
-            name="street1"
-            label="Address line 1"
-            value={formValues.street1}
-            onChange={(event) => handleChange(event)}
-            autoComplete="shipping address-line1"
-          />
-        </FormSection>
+      <FormSection>
+        <StyledLabel>
+          Address line 2
+        </StyledLabel>
 
-        <FormSection>
-          <StyledLabel>
-            Address line 2
-          </StyledLabel>
+        <input
+          type="text"
+          id="street2"
+          name="street2"
+          label="Address line 2"
+          value={formValues.street2}
+          onChange={(event) => handleChange(event)}
+          autoComplete="shipping address-line2"
+        />
+      </FormSection>
 
-          <input
-            type="text"
-            id="street2"
-            name="street2"
-            label="Address line 2"
-            value={formValues.street2}
-            onChange={(event) => handleChange(event)}
-            autoComplete="shipping address-line2"
-          />
-        </FormSection>
+      <FormSection>
+        <StyledLabel>
+          City
+        </StyledLabel>
 
-        <FormSection>
-          <StyledLabel>
-            City
-          </StyledLabel>
+        <input
+          type="text"
+          // required
+          id="city"
+          name="city"
+          label="City"
+          value={formValues.city}
+          onChange={(event) => handleChange(event)}
+          autoComplete="shipping address-level2"
+        />
+      </FormSection>
 
-          <input
-            type="text"
-            // required
-            id="city"
-            name="city"
-            label="City"
-            value={formValues.city}
-            onChange={(event) => handleChange(event)}
-            autoComplete="shipping address-level2"
-          />
-        </FormSection>
+      <FormSection>
+        <StyledLabel>
+          State
+        </StyledLabel>
 
-        <FormSection>
-          <StyledLabel>
-            State
-          </StyledLabel>
+        <input
+          type="text"
+          // required
+          id="state"
+          name="state"
+          label="State"
+          value={formValues.state}
+          onChange={(event) => handleChange(event)}
+          autoComplete="shipping address-level2"
+        />
+      </FormSection>
 
-          <input
-            type="text"
-            // required
-            id="state"
-            name="state"
-            label="State"
-            value={formValues.state}
-            onChange={(event) => handleChange(event)}
-            autoComplete="shipping address-level2"
-          />
-        </FormSection>
+      <FormSection>
+        <StyledLabel>
+          Zip
+        </StyledLabel>
 
-        <FormSection>
-          <StyledLabel>
-            Zip
-          </StyledLabel>
+        <input
+          type="text"
+          // required
+          id="zip"
+          name="zip"
+          label="Zip"
+          value={formValues.zip}
+          onChange={(event) => handleChange(event)}
+          autoComplete="shipping postal-code"
+        />
+      </FormSection>
 
-          <input
-            type="text"
-            // required
-            id="zip"
-            name="zip"
-            label="Zip"
-            value={formValues.zip}
-            onChange={(event) => handleChange(event)}
-            autoComplete="shipping postal-code"
-          />
-        </FormSection>
+      <FormSection>
+        <StyledLabel>
+          Description
+        </StyledLabel>
 
-        <FormSection>
-          <StyledLabel>
-            Description
-          </StyledLabel>
+        <textarea
+          // required
+          id="description"
+          name="description"
+          label="Description"
+          value={formValues.description}
+          onChange={(event) => handleChange(event)}
+        />
+      </FormSection>
 
-          <textarea
-            // required
-            id="description"
-            name="description"
-            label="Description"
-            value={formValues.description}
-            onChange={(event) => handleChange(event)}
-          />
-        </FormSection>
+      <FormSection id="embedded">
+        <ReactFilestack
+          apikey="AndaLCkprQkKsCBl3aG2rz"
+          actionOptions={FilePickerOptions}
+          componentDisplayMode={{
+            type: 'button',
+            customText: 'Upload Photos (Max: 3)',
+          }}
+          onSuccess={(res) => handleFileUpload(res)}
+        />
+      </FormSection>
 
-        <FormSection id="embedded">
-          <ReactFilestack
-            apikey="AndaLCkprQkKsCBl3aG2rz"
-            actionOptions={FilePickerOptions}
-            componentDisplayMode={{
-              type: 'button',
-              customText: 'Upload Photos (Max: 3)',
-            }}
-            onSuccess={(res) => handleFileUpload(res)}
-          />
-        </FormSection>
+      <FormSection>
+        <StyledButton
+          as="input"
+          type="submit"
+          value="Submit"
+        />
+      </FormSection>
 
-        <FormSection>
-          <StyledButton
-            as="input"
-            type="submit"
-            value="Submit"
-          />
-        </FormSection>
+      <p>{isSubmitting ? 'Submitting...' : ''}</p>
 
-        <p>{isSubmitting ? 'Submitting...' : ''}</p>
-
-        <p>{message.length ? message : ''}</p>
-
-      </StyledForm>
+      <p>{message.length ? message : ''}</p>
 
     </StyledListingForm>
   );

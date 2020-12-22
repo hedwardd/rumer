@@ -2,35 +2,48 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageGallery from 'react-image-gallery';
-import 'react-image-gallery/styles/css/image-gallery.css';
+import device from './styles/device';
 
 const StyledListingBrowser = styled.div`
-  padding: 0px 80px;
-  `;
+  padding: 0px 24px;
+
+  @media ${device.tablet} {
+    padding: 0px 80px;
+  }
+`;
 
 const ImageSection = styled.div`
+  width: 100%;
+
+@media ${device.tablet} {
   width: 300px;
   height: 200px;
+}
   border-radius: 1vw;
-  `;
+`;
 
 const StyledUnorderedList = styled.ul`
   display: contents;
-  `;
+`;
 
 const StyledListItem = styled.li`
   list-style-type: none;
-  `;
+`;
 
 const ListingContainer = styled.div`
   display: flex;
-  `;
+  flex-direction: column;
+
+  @media ${device.tablet} {
+    flex-direction: row;
+  }
+`;
 
 const StyledLink = styled(Link)`
   padding: 1vw;
   text-decoration: none;
   color: black;
-  `;
+`;
 
 const getListings = async (checkIn, checkOut) => {
   const listingURL = (checkIn && checkOut)
@@ -58,11 +71,11 @@ export default function ListingBrowser() {
   const checkInParam = query.get('checkIn');
   const checkOutParam = query.get('checkOut');
 
-  const [listings, setListings] = useState([]);
+  const [listings, setListings] = useState(null);
   useEffect(() => {
     async function fetchListingsData() {
       const listingsData = await getListings(checkInParam, checkOutParam);
-      setListings(listingsData);
+      if (listingsData) setListings(listingsData);
     }
     fetchListingsData();
   }, [checkInParam, checkOutParam]);
@@ -71,36 +84,47 @@ export default function ListingBrowser() {
     <StyledListingBrowser>
       <h1>Listings</h1>
 
-      {listings.length ? (
-        // Render the listings if we have them
-        <StyledUnorderedList>
-          <hr />
+      {listings ? (
+        <div>
+          <p>
+            {listings.length}
+            {' '}
+            listings
+            {(checkInParam && checkOutParam) ? (
+              ` · ${new Date(parseInt(checkInParam, 10)).toLocaleDateString()}
+              -
+              ${new Date(parseInt(checkOutParam, 10)).toLocaleDateString()}`
+            ) : null}
+          </p>
+          <StyledUnorderedList>
+            <hr />
 
-          {listings.map((listing) => (
-            <StyledListItem key={listing._id}>
-              <ListingContainer>
+            {listings.map((listing) => (
+              <StyledListItem key={listing._id}>
+                <ListingContainer>
 
-                <ImageSection>
-                  <ImageGallery
-                    items={listing.photoURLs.map((url) => ({ original: url }))}
-                    showThumbnails={false}
-                    showPlayButton={false}
-                    showFullscreenButton={false}
-                    showBullets={listing.photoURLs.length > 1}
-                    showNav={false}
-                  />
-                </ImageSection>
+                  <ImageSection>
+                    <ImageGallery
+                      items={listing.photoURLs.map((url) => ({ original: url }))}
+                      showThumbnails={false}
+                      showPlayButton={false}
+                      showFullscreenButton={false}
+                      showBullets={listing.photoURLs.length > 1}
+                      showNav={false}
+                    />
+                  </ImageSection>
 
-                <StyledLink to={`/listings/${listing._id}`}>
-                  {listing.title}
-                </StyledLink>
+                  <StyledLink to={`/listings/${listing._id}`}>
+                    {listing.title}
+                  </StyledLink>
 
-              </ListingContainer>
-              <hr />
-            </StyledListItem>
-          ))}
+                </ListingContainer>
+                <hr />
+              </StyledListItem>
+            ))}
 
-        </StyledUnorderedList>
+          </StyledUnorderedList>
+        </div>
       ) : (
         // Otherwise, render a helpful message
         <div>

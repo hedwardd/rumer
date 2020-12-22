@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-
-const StyledLabel = styled.label`
-  margin-bottom: 4px;
-  padding-bottom: 8px;
-  padding-top: 9px;
-`;
+import {
+  StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink,
+} from './styles/AuthFormStyles';
 
 // NICE-TO-HAVE: If user is already logged in, this page should not render
 export default function LoginForm({ loginHandler }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(' ');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-    setMessage('');
+    setMessage(' ');
     const res = await fetch('/api/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
@@ -42,48 +38,53 @@ export default function LoginForm({ loginHandler }) {
   };
 
   return (
-    <div>
-      <form onSubmit={(event) => handleSubmit(event)}>
-        <h2>Log in</h2>
+    <StyledAuthForm onSubmit={(event) => handleSubmit(event)}>
+      <h2>Log in</h2>
 
+      <StyledFormSection>
         <StyledLabel>
           Username
-          <input
-            type="text"
-            id="username"
-            name="username"
-            onChange={(event) => setUsername(event.target.value)}
-            value={username}
-          />
         </StyledLabel>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          onChange={(event) => setUsername(event.target.value)}
+          value={username}
+        />
+      </StyledFormSection>
 
+      <StyledFormSection>
         <StyledLabel>
           Password
-          <input
-            type="password"
-            name="password"
-            onChange={(event) => setPassword(event.target.value)}
-            value={password}
-          />
         </StyledLabel>
-
         <input
-          type="submit"
-          value="Submit"
+          type="password"
+          name="password"
+          onChange={(event) => setPassword(event.target.value)}
+          value={password}
         />
+      </StyledFormSection>
 
-      </form>
+      <StyledFormSection>
+        <StyledButton
+          as="input"
+          type="submit"
+          value="Log in"
+        />
+      </StyledFormSection>
 
-      <div>
+      <StyledFormSection>
+        <p>
+          Don&apos;t have an account?
+          {' '}
+          <StyledLink as={Link} to="/signup">Sign up</StyledLink>
+        </p>
+      </StyledFormSection>
+
+      <StyledFormSection>
         {isSubmitting ? 'Submitting...' : message}
-      </div>
-
-      <p>
-        Don&apos;t have an account?
-        {' '}
-        <Link to="/signup">Create one</Link>
-        .
-      </p>
-    </div>
+      </StyledFormSection>
+    </StyledAuthForm>
   );
 }

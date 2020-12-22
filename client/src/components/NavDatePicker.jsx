@@ -2,13 +2,27 @@ import React, { useState } from 'react';
 import { DateRangePicker } from 'react-dates';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import device from './styles/device';
 import { ReactComponent as SearchIcon } from '../search.svg';
 
+const StyledNavDatePicker = styled.div`
+  // display: none;
+  display: flex;
+    align-items: center;
+
+  // @media ${device.tablet} {
+  //   display: flex;
+  //   align-items: center;
+  // }
+`;
+
 const SearchButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #FF385C;
   border-radius: 50%;
   color: #FFFFFF;
-  padding: 10px;
   width: 32px;
   height: 32px;
   margin-left: 25px;
@@ -28,7 +42,7 @@ export default function NavDatePicker() {
   const checkOutParam = dates.endDate ? dates.endDate.format('x') : null;
 
   return (
-    <div>
+    <StyledNavDatePicker>
       <DateRangePicker
         required
         startDate={dates.startDate} // momentPropTypes.momentObj or null,
@@ -49,6 +63,6 @@ export default function NavDatePicker() {
         <StyledSearchIcon />
       </SearchButton>
 
-    </div>
+    </StyledNavDatePicker>
   );
 }

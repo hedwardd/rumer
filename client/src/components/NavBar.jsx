@@ -3,15 +3,20 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import NavDropDown from './NavDropDown';
 import NavDatePicker from './NavDatePicker';
+import device from './styles/device';
 
 const StyledNavBar = styled.nav`
-  height: 80px;
+  height: 64px;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 12px;
   display: flex;
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
   padding: 0 2vw;
+
+  @media ${device.tablet} {
+    height: 80px;
+  }
 `;
 
 const StyledLink = styled(Link)`
@@ -33,8 +38,9 @@ const StyledLink = styled(Link)`
   border: 1px solid #DDDDDD;
   border-radius: 21px;
   z-index: 1;
+  transition: box-shadow .2s;
   &:hover {
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: rgba(0, 0, 0, 0.18) 0 2px 4px;
   }
 `;
 

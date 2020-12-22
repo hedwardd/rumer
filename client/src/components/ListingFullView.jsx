@@ -12,26 +12,35 @@ const StyledListingFullView = styled.div`
   margin-right: auto;
   display: flex;
   flex-direction: column;
-  `;
+`;
 
 const TitleSection = styled.section`
 
-  `;
+`;
 
 const ImageSection = styled.section`
+  width: 100%;
+`;
 
-  `;
+const StyledImageGallery = styled(ImageGallery)`
+`;
 
 const DetailsSection = styled.section`
+  padding-top: 48px;
   width: 100%;
+  min-height: 500px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  `;
+`;
 
 const DescriptionWrapper = styled.div`
   width: 58.3333%;
-  `;
+`;
+
+const BookingFormWrapper = styled.div`
+  width: 33%;
+`;
 
 export default function ListingFullView({ user }) {
   const [listing, setListing] = useState({});
@@ -59,7 +68,7 @@ export default function ListingFullView({ user }) {
       </TitleSection>
 
       <ImageSection>
-        <ImageGallery
+        <StyledImageGallery
           items={images}
           showThumbnails={false}
           showPlayButton={false}
@@ -73,17 +82,19 @@ export default function ListingFullView({ user }) {
           <p>{listing.description}</p>
         </DescriptionWrapper>
 
-        <BookingForm
-          user={user}
-          listingId={listing._id}
-        />
+        <BookingFormWrapper>
+          <BookingForm
+            user={user}
+            listingId={listing._id}
+          />
+        </BookingFormWrapper>
 
       </DetailsSection>
     </StyledListingFullView>
   ) : (
     // Otherwise, render a helpful message
-    <div>
+    <StyledListingFullView>
       <p>Loading...</p>
-    </div>
+    </StyledListingFullView>
   );
 }
