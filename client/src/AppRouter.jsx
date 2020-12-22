@@ -76,21 +76,15 @@ export default function AppRouter() {
         </Route>
 
         <Route path="/bookings">
-          {user
-            ? (<GuestDashboard user={user} />)
-            : () => window.open('/browse', '_self')}
+          <GuestDashboard user={user} />
         </Route>
 
         <Route path="/addListing">
-          {user
-            ? (<ListingForm user={user} />)
-            : () => window.open('/browse', '_self')}
+          <ListingForm user={user} />
         </Route>
 
         <Route path="/hosting">
-          {user
-            ? (<HostDashboard user={user} />)
-            : () => window.open('/browse', '_self')}
+          <HostDashboard user={user} />
         </Route>
 
         <Route path="/">
