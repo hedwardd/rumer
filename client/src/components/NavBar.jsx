@@ -6,23 +6,31 @@ import NavDatePicker from './NavDatePicker';
 import device from './styles/device';
 
 const StyledNavBar = styled.nav`
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
   height: 64px;
-  box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 12px;
   display: flex;
-  justify-content: space-between;
+  // padding: 0 24px;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
-  padding: 0 2vw;
+  z-index: 5;
+  background-color: #FFFFFF;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 12px;
 
-  @media ${device.tablet} {
+  @media ${device.laptop} {
+    justify-content: space-between;
     height: 80px;
   }
 `;
 
-const StyledLink = styled(Link)`
+const StyledNavLink = styled(Link)`
+  margin: 0 24px;
   text-decoration: none;
   color: black;
-  display: inline-flex;
+  display: none;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -37,10 +45,12 @@ const StyledLink = styled(Link)`
   background-color: white;
   border: 1px solid #DDDDDD;
   border-radius: 21px;
-  z-index: 1;
   transition: box-shadow .2s;
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.18) 0 2px 4px;
+  }
+  @media ${device.laptop} {
+    display: inline-flex;
   }
 `;
 
@@ -51,13 +61,10 @@ const NavBar = (props) => {
   return (
     <StyledNavBar>
 
-      <StyledLink to="/">
+      <StyledNavLink to="/">
         <p>Home</p>
-      </StyledLink>
+      </StyledNavLink>
 
-      {/* <StyledLink to="/browse">
-                <p>Browse</p>
-            </StyledLink> */}
       <NavDatePicker />
 
       {isAuthenticated
@@ -68,9 +75,9 @@ const NavBar = (props) => {
           />
         )
         : (
-          <StyledLink to="/login">
+          <StyledNavLink to="/login">
             <p>Log in</p>
-          </StyledLink>
+          </StyledNavLink>
         )}
 
     </StyledNavBar>

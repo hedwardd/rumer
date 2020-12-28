@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactFilestack from 'filestack-react';
 import styled from 'styled-components';
+import device from './styles/device';
 
 const FilePickerOptions = {
   accept: ['image/*'],
@@ -8,10 +9,9 @@ const FilePickerOptions = {
 };
 
 const StyledListingForm = styled.form`
-  margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  width: 80%;
   background-color: #FFFFFF;
   color: #484848;
   display: flex;
@@ -19,7 +19,11 @@ const StyledListingForm = styled.form`
   color: #484848;
   font-size: 19px;
   line-height: 27.17px;
-  padding: 30px 30px 16px;
+  padding: 16px 30px;
+  
+  @media ${device.laptop} {
+    width: 50%;
+  }
 `;
 
 const FormSection = styled.div`
@@ -33,7 +37,7 @@ const FormSection = styled.div`
 
 const StyledLabel = styled.label`
   margin-bottom: 4px;
-  padding-bottom: 8px;
+  padding-bottom: 9px;
   padding-top: 9px;
 `;
 
@@ -50,6 +54,10 @@ const StyledButton = styled.button`
   line-height: 24px;
   padding: 10px 22px;
   text-align: center;
+`;
+
+const StyledTextArea = styled.textarea`
+  resize: none;
 `;
 
 const InitialState = {
@@ -124,7 +132,7 @@ export default function ListingForm() {
   return (
     <StyledListingForm onSubmit={(event) => handleSubmit(event)}>
 
-      <h1>Add a Listing</h1>
+      <h2>Add a Listing</h2>
 
       <FormSection>
         <StyledLabel>
@@ -148,7 +156,7 @@ export default function ListingForm() {
         </StyledLabel>
         <input
           type="text"
-          // required
+          required
           id="street1"
           name="street1"
           label="Address line 1"
@@ -181,7 +189,7 @@ export default function ListingForm() {
 
         <input
           type="text"
-          // required
+          required
           id="city"
           name="city"
           label="City"
@@ -198,7 +206,7 @@ export default function ListingForm() {
 
         <input
           type="text"
-          // required
+          required
           id="state"
           name="state"
           label="State"
@@ -215,7 +223,7 @@ export default function ListingForm() {
 
         <input
           type="text"
-          // required
+          required
           id="zip"
           name="zip"
           label="Zip"
@@ -230,11 +238,13 @@ export default function ListingForm() {
           Description
         </StyledLabel>
 
-        <textarea
-          // required
+        <StyledTextArea
+          required
           id="description"
           name="description"
           label="Description"
+          maxLength={1000}
+          rows={10}
           value={formValues.description}
           onChange={(event) => handleChange(event)}
         />

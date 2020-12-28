@@ -21,6 +21,9 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Montserrat', sans-serif;
     box-sizing: border-box;
   }
+  textarea {
+    font-family: 'Montserrat', sans-serif;
+  }
   button {
     font-family: 'Montserrat', sans-serif;
   }

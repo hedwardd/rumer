@@ -2,18 +2,12 @@ import React, { useState } from 'react';
 import { DateRangePicker } from 'react-dates';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import device from './styles/device';
+// import device from './styles/device';
 import { ReactComponent as SearchIcon } from '../search.svg';
 
 const StyledNavDatePicker = styled.div`
-  // display: none;
   display: flex;
-    align-items: center;
-
-  // @media ${device.tablet} {
-  //   display: flex;
-  //   align-items: center;
-  // }
+  align-items: center;
 `;
 
 const SearchButton = styled.div`
@@ -25,7 +19,7 @@ const SearchButton = styled.div`
   color: #FFFFFF;
   width: 32px;
   height: 32px;
-  margin-left: 25px;
+  margin-left: 5px;
 `;
 
 const StyledSearchIcon = styled(SearchIcon)`

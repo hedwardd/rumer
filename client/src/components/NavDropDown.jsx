@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import device from './styles/device';
 
 const StyledDropDown = styled.div`
-  min-width: 5vw;
-  min-height: 4vh;
+  display: none;
+  margin: 0 24px;
+  @media ${device.laptop} {
+    display: block;
+  }
 `;
 
 const DropDownButton = styled.button`
@@ -17,13 +21,10 @@ const DropDownButton = styled.button`
   text-decoration: none;
   font-size: 14px;
   padding: 5px 10px;
-  position: relative;
-  vertical-align: middle;
   border-radius: 10px;
   background-color: white;
   border: 1px solid #DDDDDD;
   border-radius: 21px;
-  z-index: 1;
 `;
 
 const DropDownContainer = styled.div`
@@ -40,10 +41,15 @@ const DropDownContainer = styled.div`
   max-height: calc(100vh - 100px);
   overflow-y: auto;
   padding: 8px 0;
+  display: none;
+
+  @media ${device.laptop} {
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+  }
 `;
 
 const DropDownLink = styled(Link)`
-  font-weight: ${(props) => (props.primary ? 'bold' : 'normal')};
+  font-weight: ${({ primary }) => (primary === 'true' ? 'bold' : 'normal')};
   color: black;
   cursor: pointer;
   box-sizing: border-box;
@@ -90,32 +96,29 @@ export default function NavDropDown({ user, _handleLogout }) {
         <p>{username}</p>
       </DropDownButton>
 
-      {isOpen
-        ? (
-          <DropDownContainer>
+      <DropDownContainer isOpen={isOpen}>
 
-            <DropDownLink onClick={() => setIsOpen(false)} to="/bookings">
-              My Reservations
-            </DropDownLink>
+        <DropDownLink primary="true" onClick={() => setIsOpen(false)} to="/bookings">
+          My Reservations
+        </DropDownLink>
 
-            <MenuDivider />
+        <MenuDivider />
 
-            <DropDownLink onClick={() => setIsOpen(false)} to="/hosting">
-              Manage Listings
-            </DropDownLink>
+        <DropDownLink onClick={() => setIsOpen(false)} to="/hosting">
+          Manage Listings
+        </DropDownLink>
 
-            <DropDownLink onClick={() => setIsOpen(false)} to="/addListing">
-              Add Listing
-            </DropDownLink>
+        <DropDownLink onClick={() => setIsOpen(false)} to="/addListing">
+          Add Listing
+        </DropDownLink>
 
-            <MenuDivider />
+        <MenuDivider />
 
-            <DropDownLink as="div" onClick={_handleLogout}>
-              Log out
-            </DropDownLink>
+        <DropDownLink as="div" onClick={_handleLogout}>
+          Log out
+        </DropDownLink>
 
-          </DropDownContainer>
-        ) : (null)}
+      </DropDownContainer>
 
     </StyledDropDown>
   );

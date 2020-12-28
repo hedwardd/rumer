@@ -4,6 +4,7 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
+import styled from 'styled-components';
 import ListingForm from './components/ListingForm';
 import ListingBrowser from './components/ListingBrowser';
 import LoginForm from './components/LoginForm';
@@ -11,7 +12,16 @@ import SignupForm from './components/SignupForm';
 import HostDashboard from './components/HostDashboard';
 import GuestDashboard from './components/GuestDashboard';
 import NavBar from './components/NavBar';
+import MobileNavBar from './components/MobileNavBar';
 import ListingFullView from './components/ListingFullView';
+import device from './components/styles/device';
+
+const StyledMainSection = styled.div`
+  margin-top: 80px;
+  @media ${device.laptop} {
+    margin-top: 96px;
+  }
+`;
 
 const _checkIfLoggedIn = async () => {
   const response = await fetch('api/auth', {
@@ -57,41 +67,52 @@ export default function AppRouter() {
           }
         }}
       />
+      <MobileNavBar
+        user={user}
+        _handleLogout={async () => {
+          const isSuccess = await _handleLogout();
+          if (isSuccess) {
+            setUser(null);
+            window.open('/', '_self');
+          }
+        }}
+      />
 
-      <Switch>
-        <Route path="/login">
-          <LoginForm loginHandler={() => setUser(user)} />
-        </Route>
+      <StyledMainSection>
+        <Switch>
+          <Route path="/login">
+            <LoginForm loginHandler={() => setUser(user)} />
+          </Route>
 
-        <Route path="/signup">
-          <SignupForm />
-        </Route>
+          <Route path="/signup">
+            <SignupForm />
+          </Route>
 
-        <Route path="/browse">
-          <ListingBrowser user={user} />
-        </Route>
+          <Route path="/browse">
+            <ListingBrowser user={user} />
+          </Route>
 
-        <Route path="/listings/:listingId">
-          <ListingFullView user={user} />
-        </Route>
+          <Route path="/listings/:listingId">
+            <ListingFullView user={user} />
+          </Route>
 
-        <Route path="/bookings">
-          <GuestDashboard user={user} />
-        </Route>
+          <Route path="/bookings">
+            <GuestDashboard user={user} />
+          </Route>
 
-        <Route path="/addListing">
-          <ListingForm user={user} />
-        </Route>
+          <Route path="/addListing">
+            <ListingForm user={user} />
+          </Route>
 
-        <Route path="/hosting">
-          <HostDashboard user={user} />
-        </Route>
+          <Route path="/hosting">
+            <HostDashboard user={user} />
+          </Route>
 
-        <Route path="/">
-          {() => (window.open('/browse', '_self'))}
-        </Route>
-      </Switch>
-
+          <Route path="/">
+            {() => (window.open('/browse', '_self'))}
+          </Route>
+        </Switch>
+      </StyledMainSection>
     </Router>
   );
 }

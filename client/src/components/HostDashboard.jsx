@@ -1,42 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-// import format from "date-fns/format"
-
-const StyledDashboard = styled.div`
-  padding: 0px 80px;
-`;
-
-const StyledImg = styled.img`
-  width: 4vw;
-  // height: 20vh;
-  border-radius: 1vw;
-`;
-
-const StyledContainer = styled.div`
-  border: 1px solid #E4E4E4;
-  border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 4px 4px 0;
-  margin: 24px;
-  padding: 12px 12px;
-  color: #484848;
-`;
-
-const StyledList = styled.ul`
-
-`;
-
-const StyledListItem = styled.li`
-  list-style-type: none;
-  display: flex;
-  flex-direction: column;
-  // justify-content: space-between;
-`;
-
-const ListingContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-`;
+import {
+  StyledHostDashboard,
+  StyledImg,
+  StyledContainer,
+  StyledList,
+  StyledBookingItem,
+  StyledListingItem,
+  StyledArchiveButton,
+} from './styles/HostDashboardStyles';
 
 const fetchHostData = async (param) => {
   const response = await fetch(`/api/host/${param}`, {
@@ -64,27 +35,52 @@ const toggleIsListingArchived = async (listingId) => {
   return responseObject;
 };
 
-const ReservationsList = ({ bookings }) => (bookings.length ? (
+const BookingsList = ({ bookings }) => (bookings.length ? (
   <StyledList>
     {bookings
       .filter((eachBooking) => new Date(eachBooking.checkOut) > new Date())
       .map((eachBooking) => (
-        <StyledListItem key={eachBooking._id}>
+        <StyledBookingItem key={eachBooking._id}>
           <p>
             {new Date(eachBooking.checkIn).toLocaleDateString()}
             -
             {new Date(eachBooking.checkOut).toLocaleDateString()}
           </p>
-          <p>{eachBooking.listingTitle}</p>
+          <p>
+            {eachBooking.listingTitle}
+          </p>
           <p>
             Reserved by:
             {' '}
             {eachBooking.guestUsername}
           </p>
-        </StyledListItem>
+        </StyledBookingItem>
       ))}
   </StyledList>
-) : 'No reservations to show.');
+) : 'No bookings to show.');
+
+const ListingsList = ({ listings, handleArchiveButton }) => (listings.length ? (
+  <StyledList>
+    {listings.map((eachListing) => (
+      <StyledListingItem key={eachListing._id}>
+
+        <StyledImg src={eachListing.photoURLs[0]} />
+
+        <p>{eachListing.title}</p>
+
+        <StyledArchiveButton
+          type="button"
+          onClick={(e) => handleArchiveButton(e, eachListing._id)}
+        >
+          {eachListing.isArchived
+            ? 'Unarchive'
+            : 'Archive'}
+        </StyledArchiveButton>
+
+      </StyledListingItem>
+    ))}
+  </StyledList>
+) : 'No bookings to show.');
 
 export default function HostDashboard({ user }) {
   const [listings, setListings] = useState([]);
@@ -125,16 +121,16 @@ export default function HostDashboard({ user }) {
   };
 
   return (
-    <StyledDashboard>
+    <StyledHostDashboard>
       <h1>Hosting Dashboard</h1>
 
       <StyledContainer>
-        <h2>Upcoming Reservations on Your Listings</h2>
+        <h2>Upcoming Bookings</h2>
 
         {areBookingsLoading ? (
           <div>Loading...</div>
         ) : (
-          <ReservationsList bookings={bookings} />
+          <BookingsList bookings={bookings} handleArchiveButton={handleArchiveButton} />
         )}
       </StyledContainer>
 
@@ -144,31 +140,10 @@ export default function HostDashboard({ user }) {
         {areListingsLoading ? (
           <div>Loading...</div>
         ) : (
-          <StyledList>
-            {listings.map((eachListing) => (
-              <StyledListItem key={eachListing._id}>
-                <ListingContainer>
-
-                  <StyledImg src={eachListing.photoURLs[0]} />
-
-                  <p>{eachListing.title}</p>
-
-                  <button
-                    type="button"
-                    onClick={(e) => handleArchiveButton(e, eachListing._id)}
-                  >
-                    {eachListing.isArchived
-                      ? 'Unarchive'
-                      : 'Archive'}
-                  </button>
-
-                </ListingContainer>
-              </StyledListItem>
-            ))}
-          </StyledList>
+          <ListingsList listings={listings} />
         )}
       </StyledContainer>
 
-    </StyledDashboard>
+    </StyledHostDashboard>
   );
 }

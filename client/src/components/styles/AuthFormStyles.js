@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const StyledAuthForm = styled.form`
-  margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
   min-width: 250px;

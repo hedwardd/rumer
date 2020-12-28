@@ -1,49 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import ImageGallery from 'react-image-gallery';
-import device from './styles/device';
-
-const StyledListingBrowser = styled.div`
-  padding: 0px 24px;
-
-  @media ${device.tablet} {
-    padding: 0px 80px;
-  }
-`;
-
-const ImageSection = styled.div`
-  width: 100%;
-
-@media ${device.tablet} {
-  width: 300px;
-  height: 200px;
-}
-  border-radius: 1vw;
-`;
-
-const StyledUnorderedList = styled.ul`
-  display: contents;
-`;
-
-const StyledListItem = styled.li`
-  list-style-type: none;
-`;
-
-const ListingContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  @media ${device.tablet} {
-    flex-direction: row;
-  }
-`;
-
-const StyledLink = styled(Link)`
-  padding: 1vw;
-  text-decoration: none;
-  color: black;
-`;
+import {
+  StyledListingBrowser, ImageSection, StyledList, StyledListItem, ListingContainer, StyledLink,
+} from './styles/ListingBrowserStyles';
 
 const getListings = async (checkIn, checkOut) => {
   const listingURL = (checkIn && checkOut)
@@ -68,6 +28,7 @@ const useQuery = () => new URLSearchParams(useLocation().search);
 
 export default function ListingBrowser() {
   const query = useQuery();
+  const history = useHistory();
   const checkInParam = query.get('checkIn');
   const checkOutParam = query.get('checkOut');
   const [isLoading, setIsLoading] = useState(false);
@@ -101,7 +62,7 @@ export default function ListingBrowser() {
               ${new Date(parseInt(checkOutParam, 10)).toLocaleDateString()}`
             ) : null}
           </p>
-          <StyledUnorderedList>
+          <StyledList>
             <hr />
 
             {listings.map((listing) => (
@@ -116,10 +77,14 @@ export default function ListingBrowser() {
                       showFullscreenButton={false}
                       showBullets={listing.photoURLs.length > 1}
                       showNav={false}
+                      onClick={() => history.push(`/listings/${listing._id}`)}
                     />
                   </ImageSection>
 
-                  <StyledLink to={`/listings/${listing._id}`}>
+                  <StyledLink
+                    as={Link}
+                    to={`/listings/${listing._id}`}
+                  >
                     {listing.title}
                   </StyledLink>
 
@@ -128,7 +93,7 @@ export default function ListingBrowser() {
               </StyledListItem>
             ))}
 
-          </StyledUnorderedList>
+          </StyledList>
         </div>
       )}
 
