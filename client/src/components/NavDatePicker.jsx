@@ -1,32 +1,7 @@
 import React, { useState } from 'react';
 import { DateRangePicker } from 'react-dates';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-// import device from './styles/device';
-import { ReactComponent as SearchIcon } from '../search.svg';
-
-const StyledNavDatePicker = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const SearchButton = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #FF385C;
-  border-radius: 50%;
-  color: #FFFFFF;
-  width: 32px;
-  height: 32px;
-  margin-left: 5px;
-`;
-
-const StyledSearchIcon = styled(SearchIcon)`
-  width: 12px;
-  height: 12px;
-  color: white;
-`;
+import { StyledNavDatePicker, SearchButton, StyledSearchIcon } from './styles/NavDatePickerStyles';
 
 export default function NavDatePicker() {
   const [dates, setDates] = useState({ startDate: null, endDate: null });

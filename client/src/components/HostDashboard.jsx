@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
   StyledHostDashboard,
-  StyledImg,
+  StyledActiveTab,
+  StyledInactiveTab,
   StyledContainer,
-  StyledList,
+  StyledBookingList,
   StyledBookingItem,
+  StyledBookingImage,
+  StyledBookingDetailsSection,
   StyledListingItem,
+  StyledListingImage,
   StyledArchiveButton,
 } from './styles/HostDashboardStyles';
 
@@ -36,35 +40,40 @@ const toggleIsListingArchived = async (listingId) => {
 };
 
 const BookingsList = ({ bookings }) => (bookings.length ? (
-  <StyledList>
+  <StyledBookingList>
     {bookings
-      .filter((eachBooking) => new Date(eachBooking.checkOut) > new Date())
       .map((eachBooking) => (
         <StyledBookingItem key={eachBooking._id}>
-          <p>
-            {new Date(eachBooking.checkIn).toLocaleDateString()}
-            -
-            {new Date(eachBooking.checkOut).toLocaleDateString()}
-          </p>
-          <p>
-            {eachBooking.listingTitle}
-          </p>
-          <p>
-            Reserved by:
-            {' '}
-            {eachBooking.guestUsername}
-          </p>
+          <StyledBookingImage
+            src={eachBooking.listingInfo.photoURLs[0]}
+            alt=""
+          />
+          <StyledBookingDetailsSection>
+            <p>
+              {new Date(eachBooking.checkIn).toLocaleDateString()}
+              -
+              {new Date(eachBooking.checkOut).toLocaleDateString()}
+            </p>
+            <p>
+              {eachBooking.listingInfo.title}
+            </p>
+            <p>
+              Reserved by:
+              {' '}
+              {eachBooking.guestUsername}
+            </p>
+          </StyledBookingDetailsSection>
         </StyledBookingItem>
       ))}
-  </StyledList>
+  </StyledBookingList>
 ) : 'No bookings to show.');
 
 const ListingsList = ({ listings, handleArchiveButton }) => (listings.length ? (
-  <StyledList>
+  <ul>
     {listings.map((eachListing) => (
       <StyledListingItem key={eachListing._id}>
 
-        <StyledImg src={eachListing.photoURLs[0]} />
+        <StyledListingImage src={eachListing.photoURLs[0]} />
 
         <p>{eachListing.title}</p>
 
@@ -73,13 +82,13 @@ const ListingsList = ({ listings, handleArchiveButton }) => (listings.length ? (
           onClick={(e) => handleArchiveButton(e, eachListing._id)}
         >
           {eachListing.isArchived
-            ? 'Unarchive'
+            ? 'Restore'
             : 'Archive'}
         </StyledArchiveButton>
 
       </StyledListingItem>
     ))}
-  </StyledList>
+  </ul>
 ) : 'No bookings to show.');
 
 export default function HostDashboard({ user }) {
@@ -95,20 +104,41 @@ export default function HostDashboard({ user }) {
     if (user) fetchListingData();
   }, [user]);
 
-  const [bookings, setBookings] = useState([]);
+  const [upcomingBookings, setUpcomingBookings] = useState([]);
+  const [pastBookings, setPastBookings] = useState([]);
   const [areBookingsLoading, setAreBookingsLoading] = useState(false);
+  const [isPastSelected, setIsPastSelected] = useState(false);
   useEffect(() => {
     async function fetchBookingData() {
       setAreBookingsLoading(true);
-      const listingTitles = listings
-        .reduce((acc, curr) => ({ ...acc, [curr._id]: curr.title }), {});
+      const listingInfoById = listings
+        .reduce((acc, curr) => ({
+          ...acc,
+          [curr._id]: {
+            title: curr.title,
+            photoURLs: curr.photoURLs,
+          },
+        }), {});
       const bookingData = await fetchHostData('bookings/');
-      const bookingsWithTitles = bookingData
-        .map((booking) => ({
-          ...booking,
-          listingTitle: listingTitles[booking._associatedListing],
+      const bookingsWithListingInfo = bookingData
+        .map((thisBooking) => ({
+          ...thisBooking,
+          listingInfo: { ...listingInfoById[thisBooking._associatedListing] },
         }));
-      setBookings(bookingsWithTitles);
+      const now = new Date();
+      const upcoming = bookingsWithListingInfo
+        .filter(
+          (thisBooking) => (
+            (new Date(thisBooking.checkIn) >= now) || (new Date(thisBooking.checkOut) >= now)
+          ),
+        );
+      const past = bookingsWithListingInfo
+        .filter(
+          (thisBooking) => (
+            (new Date(thisBooking.checkIn) < now) && (new Date(thisBooking.checkOut) < now)),
+        );
+      setUpcomingBookings(upcoming);
+      setPastBookings(past);
       setAreBookingsLoading(false);
     }
     if (listings.length) fetchBookingData();
@@ -122,21 +152,68 @@ export default function HostDashboard({ user }) {
 
   return (
     <StyledHostDashboard>
-      <h1>Hosting Dashboard</h1>
+      <h1>
+        Hosting Dashboard
+      </h1>
 
+      <h2>
+        Reservations
+      </h2>
       <StyledContainer>
-        <h2>Upcoming Bookings</h2>
+        {isPastSelected ? (
+          <div>
+            <StyledInactiveTab
+              type="button"
+              role="tab"
+              isSelected={!isPastSelected}
+              onClick={() => setIsPastSelected(false)}
+            >
+              Upcoming
+            </StyledInactiveTab>
+            <StyledActiveTab
+              type="button"
+              role="tab"
+              isSelected={isPastSelected}
+              onClick={() => setIsPastSelected(true)}
+            >
+              Past
+            </StyledActiveTab>
+          </div>
+        ) : (
+          <div>
+            <StyledActiveTab
+              type="button"
+              role="tab"
+              isSelected={!isPastSelected}
+              onClick={() => setIsPastSelected(false)}
+            >
+              Upcoming
+            </StyledActiveTab>
+            <StyledInactiveTab
+              type="button"
+              role="tab"
+              isSelected={isPastSelected}
+              onClick={() => setIsPastSelected(true)}
+            >
+              Past
+            </StyledInactiveTab>
+          </div>
+        )}
 
         {areBookingsLoading ? (
           <div>Loading...</div>
         ) : (
-          <BookingsList bookings={bookings} handleArchiveButton={handleArchiveButton} />
+          <BookingsList
+            bookings={isPastSelected ? pastBookings : upcomingBookings}
+            handleArchiveButton={handleArchiveButton}
+          />
         )}
       </StyledContainer>
 
+      <h2>
+        Your Listings
+      </h2>
       <StyledContainer>
-        <h2>Your Listings</h2>
-
         {areListingsLoading ? (
           <div>Loading...</div>
         ) : (

@@ -18,8 +18,10 @@ import device from './components/styles/device';
 
 const StyledMainSection = styled.div`
   margin-top: 80px;
+  margin-bottom: 75px;
   @media ${device.laptop} {
     margin-top: 96px;
+    margin-bottom: 10px;
   }
 `;
 

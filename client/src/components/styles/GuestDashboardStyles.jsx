@@ -5,23 +5,53 @@ const StyledGuestDashboard = styled.div`
   padding: 0px 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
 
   @media ${device.tablet} {
     padding: 0px 80px;
   }
 `;
 
-const StyledHeader1 = styled.h1`
-  align-self: flex-start;
+const StyledTab = styled.button`
+  color: #222222;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  padding: 16px;
+  margin: 4px;
+  text-align: center
+  font-size: 14px;
+  line-height: 18px;
+  @media ${device.tablet} {
+    font-size: 16px;
+    line-height: 20px;
+  }
+`;
+
+const StyledActiveTab = styled(StyledTab)`
+  // box-shadow: #ffffff 0px 0px 0px 2px, #222222 0px 0px 0px 4px;
+  ::after {
+    border-color: rgb(34, 34, 34);
+    border-style: solid;
+    border-width: 0px 0px 2px;
+    content: "";
+    display: block;
+    margin-bottom: -16px;
+    padding-top: 16px;
+  }
+`;
+
+const StyledInactiveTab = styled(StyledTab)`
+  color: #717171;
+  :hover {
+    background: #f7f7f7;
+    color: #222222;
+  }
 `;
 
 const StyledContainer = styled.div`
   color: #484848;
-  margin: 5px;
   padding: 5px 5px;
   @media ${device.tablet} {
-    margin: 0px 24px;
     padding: 12px 12px;
     border: 1px solid #E4E4E4;
     border-radius: 4px;
@@ -33,7 +63,7 @@ const StyledList = styled.ul`
   padding: 5px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   @media ${device.tablet} {
     flex-direction: row;
     flex-wrap: wrap;
@@ -54,7 +84,7 @@ const StyledListItem = styled.li`
   }
 `;
 
-const StyledImg = styled.img`
+const StyledImage = styled.img`
   height: 70%;
   margin: 0px;
 `;
@@ -66,8 +96,9 @@ const StyledDetailsSection = styled.div`
 
 export {
   StyledGuestDashboard,
-  StyledHeader1,
-  StyledImg,
+  StyledActiveTab,
+  StyledInactiveTab,
+  StyledImage,
   StyledContainer,
   StyledList,
   StyledListItem,

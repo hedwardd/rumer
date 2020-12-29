@@ -1,83 +1,81 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import device from './styles/device';
-
-const StyledMobileNavBar = styled.nav`
-  z-index: 5;
-  background-color: white;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  @media ${device.laptop} {
-    display: none;
-  }
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: black;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  box-sizing: border-box;
-  min-width: 5vw;
-  height: 42px;
-  font-size: 14px;
-  padding: 5px 10px;
-  position: relative;
-  vertical-align: middle;
-  border-radius: 10px;
-  background-color: white;
-  border: 1px solid #DDDDDD;
-  border-radius: 21px;
-  z-index: 1;
-  transition: box-shadow .2s;
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.18) 0 2px 4px;
-  }
-`;
+import {
+  StyledMobileNavBar,
+  StyledLink,
+  StyledIconSection,
+  StyledLabelSection,
+  StyledSearchIcon,
+  StyledBedIcon,
+  StyledLoginIcon,
+  StyledLogoutIcon,
+  StyledAddIcon,
+  StyledHouseIcon,
+} from './styles/MobileNavBarStyles';
 
 export default function MobileNavBar({ user, _handleLogout }) {
   return (
     <StyledMobileNavBar>
 
-      <StyledLink to="/browse">
-        <p>Browse</p>
+      <StyledLink as={Link} to="/browse">
+        <StyledIconSection>
+          <StyledSearchIcon />
+        </StyledIconSection>
+        <StyledLabelSection>
+          <p>Browse</p>
+        </StyledLabelSection>
       </StyledLink>
 
       {user ? (
-        <StyledLink to="/bookings">
-          Reservations
+        <StyledLink as={Link} to="/bookings">
+          <StyledIconSection>
+            <StyledBedIcon />
+          </StyledIconSection>
+          <StyledLabelSection>
+            <p>Reservations</p>
+          </StyledLabelSection>
         </StyledLink>
       ) : null}
 
       {user ? (
-        <StyledLink to="/hosting">
-          Manage Listings
+        <StyledLink as={Link} to="/hosting">
+          <StyledIconSection>
+            <StyledHouseIcon />
+          </StyledIconSection>
+          <StyledLabelSection>
+            <p>Manage listings</p>
+          </StyledLabelSection>
         </StyledLink>
       ) : null}
 
       {user ? (
-        <StyledLink to="/addListing">
-          Add Listing
+        <StyledLink as={Link} to="/addListing">
+          <StyledIconSection>
+            <StyledAddIcon />
+          </StyledIconSection>
+          <StyledLabelSection>
+            <p>Add listing</p>
+          </StyledLabelSection>
         </StyledLink>
       ) : null}
 
       {user ? (
-        <StyledLink as="div" onClick={_handleLogout}>
-          Log out
+        <StyledLink as="button" type="button" onClick={_handleLogout}>
+          <StyledIconSection>
+            <StyledLogoutIcon />
+          </StyledIconSection>
+          <StyledLabelSection>
+            <p>Log out</p>
+          </StyledLabelSection>
         </StyledLink>
       ) : (
-        <StyledLink to="/login">
-          Log in
+        <StyledLink as={Link} to="/login">
+          <StyledIconSection>
+            <StyledLoginIcon />
+          </StyledIconSection>
+          <StyledLabelSection>
+            <p>Log in</p>
+          </StyledLabelSection>
         </StyledLink>
       )}
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   StyledGuestDashboard,
-  StyledHeader1,
-  StyledImg,
+  StyledActiveTab,
+  StyledInactiveTab,
+  StyledImage,
   StyledContainer,
   StyledList,
   StyledListItem,
@@ -19,14 +20,30 @@ const getBookings = async () => {
     },
   });
   const bookingData = await response.json();
-  return bookingData;
+  const now = new Date();
+  const upcomingBookings = bookingData
+    .filter(
+      (thisBooking) => (
+        (new Date(thisBooking.checkIn) >= now) || (new Date(thisBooking.checkOut) >= now)
+      ),
+    );
+  const pastBookings = bookingData
+    .filter(
+      (thisBooking) => (
+        (new Date(thisBooking.checkIn) < now) && (new Date(thisBooking.checkOut) < now)),
+    );
+  const bookingsObject = {
+    upcoming: upcomingBookings,
+    past: pastBookings,
+  };
+  return bookingsObject;
 };
 
 const ReservationsList = ({ bookings }) => (bookings.length ? (
   <StyledList>
     {bookings.map((eachBooking) => (
       <StyledListItem key={eachBooking._id}>
-        <StyledImg
+        <StyledImage
           src={eachBooking.listingInfo.photoURLs[0]}
           alt=""
         />
@@ -47,12 +64,15 @@ const ReservationsList = ({ bookings }) => (bookings.length ? (
 
 export default function GuestDashboard({ user }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [bookings, setBookings] = useState([]);
+  const [upcomingBookings, setUpcomingBookings] = useState([]);
+  const [pastBookings, setPastBookings] = useState([]);
+  const [isPastSelected, setIsPastSelected] = useState(false);
   useEffect(() => {
     async function fetchBookingData() {
       setIsLoading(true);
       const bookingData = await getBookings();
-      setBookings(bookingData);
+      setUpcomingBookings(bookingData.upcoming);
+      setPastBookings(bookingData.past);
       setIsLoading(false);
     }
     if (user) fetchBookingData();
@@ -60,14 +80,55 @@ export default function GuestDashboard({ user }) {
 
   return (
     <StyledGuestDashboard>
-      <StyledHeader1>Reservations</StyledHeader1>
+      <h1>
+        Reservations
+      </h1>
+
+      {isPastSelected ? (
+        <div>
+          <StyledInactiveTab
+            type="button"
+            role="tab"
+            isSelected={!isPastSelected}
+            onClick={() => setIsPastSelected(false)}
+          >
+            Upcoming
+          </StyledInactiveTab>
+          <StyledActiveTab
+            type="button"
+            role="tab"
+            isSelected={isPastSelected}
+            onClick={() => setIsPastSelected(true)}
+          >
+            Past
+          </StyledActiveTab>
+        </div>
+      ) : (
+        <div>
+          <StyledActiveTab
+            type="button"
+            role="tab"
+            isSelected={!isPastSelected}
+            onClick={() => setIsPastSelected(false)}
+          >
+            Upcoming
+          </StyledActiveTab>
+          <StyledInactiveTab
+            type="button"
+            role="tab"
+            isSelected={isPastSelected}
+            onClick={() => setIsPastSelected(true)}
+          >
+            Past
+          </StyledInactiveTab>
+        </div>
+      )}
 
       <StyledContainer>
-        <h2>Upcoming Reservations</h2>
         {isLoading ? (
           <div>Loading...</div>
         ) : (
-          <ReservationsList bookings={bookings} />
+          <ReservationsList bookings={isPastSelected ? pastBookings : upcomingBookings} />
         )}
       </StyledContainer>
     </StyledGuestDashboard>
