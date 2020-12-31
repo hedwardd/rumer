@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import formatDateInterval from '../utilities/index';
 import {
   StyledHostDashboard,
   StyledActiveTab,
   StyledInactiveTab,
+  StyledListingImage,
   StyledContainer,
   StyledBookingList,
   StyledBookingItem,
   StyledBookingImage,
   StyledBookingDetailsSection,
+  StyledDateRange,
   StyledListingItem,
-  StyledListingImage,
   StyledArchiveButton,
 } from './styles/HostDashboardStyles';
 
@@ -49,11 +51,9 @@ const BookingsList = ({ bookings }) => (bookings.length ? (
             alt=""
           />
           <StyledBookingDetailsSection>
-            <p>
-              {new Date(eachBooking.checkIn).toLocaleDateString()}
-              -
-              {new Date(eachBooking.checkOut).toLocaleDateString()}
-            </p>
+            <StyledDateRange>
+              {formatDateInterval(eachBooking.checkIn, eachBooking.checkOut)}
+            </StyledDateRange>
             <p>
               {eachBooking.listingInfo.title}
             </p>

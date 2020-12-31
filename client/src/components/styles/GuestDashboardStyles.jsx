@@ -94,6 +94,11 @@ const StyledDetailsSection = styled.div`
   padding: 10px;
 `;
 
+const StyledDateRange = styled.p`
+  font-size: 12px;
+  color: #717171;
+`;
+
 export {
   StyledGuestDashboard,
   StyledActiveTab,
@@ -103,4 +108,5 @@ export {
   StyledList,
   StyledListItem,
   StyledDetailsSection,
+  StyledDateRange,
 };

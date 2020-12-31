@@ -89,6 +89,11 @@ const StyledBookingDetailsSection = styled.div`
   padding: 10px;
 `;
 
+const StyledDateRange = styled.p`
+  font-size: 12px;
+  color: #717171;
+`;
+
 const StyledListingItem = styled.li`
   margin: 20px 10px;
   display: flex;
@@ -120,6 +125,7 @@ export {
   StyledBookingItem,
   StyledBookingImage,
   StyledBookingDetailsSection,
+  StyledDateRange,
   StyledListingItem,
   StyledArchiveButton,
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import formatDateInterval from '../utilities/index';
 import {
   StyledGuestDashboard,
   StyledActiveTab,
@@ -8,6 +9,7 @@ import {
   StyledList,
   StyledListItem,
   StyledDetailsSection,
+  StyledDateRange,
 } from './styles/GuestDashboardStyles';
 
 const getBookings = async () => {
@@ -48,11 +50,9 @@ const ReservationsList = ({ bookings }) => (bookings.length ? (
           alt=""
         />
         <StyledDetailsSection>
-          <p>
-            {new Date(eachBooking.checkIn).toLocaleDateString()}
-            -
-            {new Date(eachBooking.checkOut).toLocaleDateString()}
-          </p>
+          <StyledDateRange>
+            {formatDateInterval(eachBooking.checkIn, eachBooking.checkOut)}
+          </StyledDateRange>
           <p>
             {eachBooking.listingInfo.title}
           </p>
