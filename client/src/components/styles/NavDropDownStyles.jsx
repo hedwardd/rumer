@@ -23,6 +23,11 @@ const DropDownButton = styled.button`
   background-color: white;
   border: 1px solid #DDDDDD;
   border-radius: 21px;
+  box-shadow: ${({ isOpen }) => (isOpen ? 'rgba(0, 0, 0, 0.18) 0 2px 4px;' : 'none')}
+  transition: box-shadow .2s;
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.18) 0 2px 4px;
+  }
 `;
 
 const DropDownContainer = styled.div`

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import OutsideClickHandler from 'react-outside-click-handler';
 import {
   StyledDropDown, DropDownButton, DropDownContainer, DropDownLink, MenuDivider,
 } from './styles/NavDropDownStyles';
@@ -9,38 +10,45 @@ export default function NavDropDown({ user, _handleLogout }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <StyledDropDown
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
+    <StyledDropDown>
 
-      <DropDownButton isOpen={isOpen}>
+      <DropDownButton
+        isOpen={isOpen}
+        onClick={() => setIsOpen(true)}
+      >
         <p>{username}</p>
       </DropDownButton>
 
-      <DropDownContainer isOpen={isOpen}>
+      <OutsideClickHandler
+        disabled={!isOpen}
+        onOutsideClick={() => setIsOpen(false)}
+      >
 
-        <DropDownLink as={Link} primary="true" onClick={() => setIsOpen(false)} to="/bookings">
-          My Reservations
-        </DropDownLink>
+        <DropDownContainer isOpen={isOpen}>
 
-        <MenuDivider />
+          <DropDownLink as={Link} primary="true" onClick={() => setIsOpen(false)} to="/bookings">
+            My Reservations
+          </DropDownLink>
 
-        <DropDownLink as={Link} onClick={() => setIsOpen(false)} to="/hosting">
-          Manage Listings
-        </DropDownLink>
+          <MenuDivider />
 
-        <DropDownLink as={Link} onClick={() => setIsOpen(false)} to="/addListing">
-          Add Listing
-        </DropDownLink>
+          <DropDownLink as={Link} onClick={() => setIsOpen(false)} to="/hosting">
+            Manage Listings
+          </DropDownLink>
 
-        <MenuDivider />
+          <DropDownLink as={Link} onClick={() => setIsOpen(false)} to="/addListing">
+            Add Listing
+          </DropDownLink>
 
-        <DropDownLink as="button" type="button" onClick={_handleLogout}>
-          Log out
-        </DropDownLink>
+          <MenuDivider />
 
-      </DropDownContainer>
+          <DropDownLink as="button" type="button" onClick={_handleLogout}>
+            Log out
+          </DropDownLink>
+
+        </DropDownContainer>
+
+      </OutsideClickHandler>
 
     </StyledDropDown>
   );
