@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from 'react-router-dom';
 import styled from 'styled-components';
 import ListingForm from './components/ListingForm';
@@ -48,16 +49,25 @@ const _handleLogout = async () => {
 };
 
 export default function AppRouter() {
+  const [checkedAuth, setCheckedAuth] = useState(false);
   const [user, setUser] = useState(null);
   useEffect(() => {
     async function attemptUserAuth() {
       const authResult = await _checkIfLoggedIn();
       if (authResult) setUser(authResult);
+      setCheckedAuth(true);
     }
-    if (!user) attemptUserAuth();
-  });
+    if (!user || !checkedAuth) attemptUserAuth();
+  }, [user, checkedAuth]);
 
-  return (
+  function _handleLogin(_user) {
+    setUser(_user);
+    setCheckedAuth(false);
+  }
+
+  const isLoggedIn = !!user;
+
+  return (checkedAuth) ? (
     <Router>
       <NavBar
         user={user}
@@ -65,7 +75,6 @@ export default function AppRouter() {
           const isSuccess = await _handleLogout();
           if (isSuccess) {
             setUser(null);
-            window.open('/', '_self');
           }
         }}
       />
@@ -75,7 +84,6 @@ export default function AppRouter() {
           const isSuccess = await _handleLogout();
           if (isSuccess) {
             setUser(null);
-            window.open('/', '_self');
           }
         }}
       />
@@ -83,11 +91,15 @@ export default function AppRouter() {
       <StyledMainSection>
         <Switch>
           <Route path="/login">
-            <LoginForm loginHandler={() => setUser(user)} />
+            {isLoggedIn
+              ? <Redirect to="/" />
+              : <LoginForm loginHandler={_handleLogin} />}
           </Route>
 
           <Route path="/signup">
-            <SignupForm />
+            {isLoggedIn
+              ? <Redirect to="/" />
+              : <SignupForm />}
           </Route>
 
           <Route path="/browse">
@@ -99,22 +111,28 @@ export default function AppRouter() {
           </Route>
 
           <Route path="/bookings">
-            <GuestDashboard user={user} />
+            {!isLoggedIn
+              ? <Redirect to="/login" />
+              : <GuestDashboard user={user} />}
           </Route>
 
           <Route path="/addListing">
-            <ListingForm user={user} />
+            {!isLoggedIn
+              ? <Redirect to="/login" />
+              : <ListingForm user={user} />}
           </Route>
 
           <Route path="/hosting">
-            <HostDashboard user={user} />
+            {!isLoggedIn
+              ? <Redirect to="/login" />
+              : <HostDashboard user={user} />}
           </Route>
 
           <Route path="/">
-            {() => (window.open('/browse', '_self'))}
+            <Redirect to="/browse" />
           </Route>
         </Switch>
       </StyledMainSection>
     </Router>
-  );
+  ) : (<div />);
 }

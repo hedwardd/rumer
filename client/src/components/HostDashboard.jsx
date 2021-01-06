@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import formatDateInterval from '../utilities/index';
 import {
   StyledHostDashboard,
@@ -92,6 +93,7 @@ const ListingsList = ({ listings, handleArchiveButton }) => (listings.length ? (
 ) : 'No bookings to show.');
 
 export default function HostDashboard({ user }) {
+  const history = useHistory();
   const [listings, setListings] = useState([]);
   const [areListingsLoading, setAreListingsLoading] = useState(false);
   useEffect(() => {
@@ -147,7 +149,11 @@ export default function HostDashboard({ user }) {
   const handleArchiveButton = async (event, listingId) => {
     event.preventDefault();
     const result = await toggleIsListingArchived(listingId);
-    if (result.success) window.open('/hosting', '_self');
+    if (result.success) {
+      setTimeout(() => {
+        history.go(0);
+      }, 1000);
+    }
   };
 
   return (
@@ -205,7 +211,6 @@ export default function HostDashboard({ user }) {
         ) : (
           <BookingsList
             bookings={isPastSelected ? pastBookings : upcomingBookings}
-            handleArchiveButton={handleArchiveButton}
           />
         )}
       </StyledContainer>
@@ -217,7 +222,10 @@ export default function HostDashboard({ user }) {
         {areListingsLoading ? (
           <div>Loading...</div>
         ) : (
-          <ListingsList listings={listings} />
+          <ListingsList
+            listings={listings}
+            handleArchiveButton={handleArchiveButton}
+          />
         )}
       </StyledContainer>
 

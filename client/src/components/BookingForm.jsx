@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { DateRangePicker } from 'react-dates';
 import isWithinInterval from 'date-fns/isWithinInterval';
 import {
@@ -46,6 +47,8 @@ const postBooking = async (dates, listingId) => {
 };
 
 export default function BookingForm({ user, listingId }) {
+  const history = useHistory();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -70,7 +73,7 @@ export default function BookingForm({ user, listingId }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!user) window.open('/login', '_self');
+    if (!user) history.push('/login');
     else {
       setIsSubmitting(true);
       const result = await postBooking(dates, listingId);

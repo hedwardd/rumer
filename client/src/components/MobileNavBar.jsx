@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   StyledMobileNavBar,
   StyledLink,
@@ -14,6 +14,8 @@ import {
 } from './styles/MobileNavBarStyles';
 
 export default function MobileNavBar({ user, _handleLogout }) {
+  const history = useHistory();
+
   return (
     <StyledMobileNavBar>
 
@@ -60,7 +62,14 @@ export default function MobileNavBar({ user, _handleLogout }) {
       ) : null}
 
       {user ? (
-        <StyledLink as="button" type="button" onClick={_handleLogout}>
+        <StyledLink
+          as="button"
+          type="button"
+          onClick={async () => {
+            await _handleLogout();
+            history.push('/');
+          }}
+        >
           <StyledIconSection>
             <StyledLogoutIcon />
           </StyledIconSection>

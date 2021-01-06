@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink,
 } from './styles/AuthFormStyles';
 
 // NICE-TO-HAVE: If user is already logged in, this page should not render
 export default function LoginForm({ loginHandler }) {
+  const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +32,7 @@ export default function LoginForm({ loginHandler }) {
         setMessage(data.success);
         setTimeout(() => {
           loginHandler(data.user);
-          window.open('/browse', '_self');
+          history.push('/browse');
         }, 2000);
       }
     }

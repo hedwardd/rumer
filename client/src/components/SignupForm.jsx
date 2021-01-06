@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink,
 } from './styles/AuthFormStyles';
 
 export default function SignupForm() {
+  const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,8 +26,8 @@ export default function SignupForm() {
     else {
       setMessage(data.success);
       setTimeout(() => {
-        window.open('/login', '_self');
-      }, 3000);
+        history.push('/login');
+      }, 2000);
     }
   };
 

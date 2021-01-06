@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import OutsideClickHandler from 'react-outside-click-handler';
 import {
   StyledDropDown, DropDownButton, DropDownContainer, DropDownLink, MenuDivider,
@@ -8,6 +8,7 @@ import {
 export default function NavDropDown({ user, _handleLogout }) {
   const { username } = user;
   const [isOpen, setIsOpen] = useState(false);
+  const history = useHistory();
 
   return (
     <StyledDropDown>
@@ -42,7 +43,14 @@ export default function NavDropDown({ user, _handleLogout }) {
 
           <MenuDivider />
 
-          <DropDownLink as="button" type="button" onClick={_handleLogout}>
+          <DropDownLink
+            as="button"
+            type="button"
+            onClick={async () => {
+              await _handleLogout();
+              history.push('/');
+            }}
+          >
             Log out
           </DropDownLink>
 
