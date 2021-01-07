@@ -10,7 +10,7 @@ const dbOptions = {
 module.exports = {
   connect: () => {
     mongoose.Promise = Promise;
-    mongoose.connect(process.env.MONGO_URI, dbOptions);
+    mongoose.connect(process.env.MONGO_TEST_URI, dbOptions);
   },
   disconnect: (done) => {
     mongoose.disconnect(done);
