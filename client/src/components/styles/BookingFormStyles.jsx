@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StyledBookingForm = styled.form`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   border: 1px solid #DDDDDD;
   border-radius: 12px;
