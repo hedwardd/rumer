@@ -23,7 +23,7 @@ module.exports = (app) => {
     .post(passport.authenticate('local'), (req, res) => {
       res.json({
         success: 'Welcome back!',
-        user: req.user,
+        user: { username: req.user.username },
       });
     });
 
