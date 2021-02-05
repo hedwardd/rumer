@@ -1,16 +1,3 @@
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -134,6 +121,7 @@ Project Link: [Source](https://github.com/hedwardd/rumer), [Live](https://rumer.
 * [React Carousel Image Gallery](https://github.com/xiaolin/react-image-gallery)
 * [react-outside-click-handler](https://github.com/airbnb/react-outside-click-handler)
 * [Choose an Open Source License](https://choosealicense.com)
+* [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 
 
