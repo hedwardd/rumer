@@ -2,7 +2,7 @@
   "name": "rumer",
   "version": "1.0.0",
   "engines": {
-    "node": ">=8.3.0"
+    "node": "15.13.0"
   },
   "description": "A simple room listing and renting app",
   "main": "server.js",
