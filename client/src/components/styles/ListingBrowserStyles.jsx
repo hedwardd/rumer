@@ -10,6 +10,7 @@ const StyledListingBrowser = styled.div`
 
 const ImageSection = styled.div`
   width: 100%;
+  cursor: pointer;
 
   @media ${device.tablet} {
     width: 300px;
