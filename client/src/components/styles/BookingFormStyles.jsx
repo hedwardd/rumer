@@ -21,10 +21,6 @@ const FormContentWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const StyledDateRangePicker = styled.div`
-  width: 100%;
-`;
-
 const ReserveButton = styled.input`
   background-image: linear-gradient(to right, #E61E4D 0%, #E31C5F 50%, #D70466 100%);
   border-radius: 8px;
@@ -49,5 +45,5 @@ const ReserveButton = styled.input`
 `;
 
 export {
-  StyledBookingForm, FormContentWrapper, StyledDateRangePicker, ReserveButton,
+  StyledBookingForm, FormContentWrapper, ReserveButton,
 };

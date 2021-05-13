@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { DateRangePicker } from 'react-dates';
 import isWithinInterval from 'date-fns/isWithinInterval';
 import {
-  StyledBookingForm, FormContentWrapper, StyledDateRangePicker, ReserveButton,
+  StyledBookingForm, FormContentWrapper, ReserveButton,
 } from './styles/BookingFormStyles';
 
 const getBookedDates = async (listingId) => {
@@ -56,6 +56,18 @@ export default function BookingForm({ user, listingId }) {
   const [focusedInput, setFocusedInput] = useState(null);
 
   const [bookedDates, setBookedDates] = useState(null);
+
+  const [mQuery, setMQuery] = React.useState({
+    matches: window.innerWidth <= 768,
+  });
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    mediaQuery.addEventListener('change', setMQuery);
+    // cleanup function to remove the listener
+    return () => mediaQuery.removeEventListener(setMQuery);
+  }, []);
+
   useEffect(() => {
     async function fetchBookedDates() {
       const fetchResult = await getBookedDates(listingId);
@@ -100,8 +112,7 @@ export default function BookingForm({ user, listingId }) {
 
       { bookedDates ? (
         <FormContentWrapper>
-          <StyledDateRangePicker
-            as={DateRangePicker}
+          <DateRangePicker
             required
             startDate={dates.checkIn} // momentPropTypes.momentObj or null,
             startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
@@ -114,6 +125,7 @@ export default function BookingForm({ user, listingId }) {
             focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
             onFocusChange={(input) => setFocusedInput(input)} // PropTypes.func.isRequired,
             isDayBlocked={isDayBlocked}
+            numberOfMonths={mQuery.matches ? 1 : 2}
           />
 
           <ReserveButton
