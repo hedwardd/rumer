@@ -65,7 +65,7 @@ export default function BookingForm({ user, listingId }) {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
     mediaQuery.addEventListener('change', setMQuery);
     // cleanup function to remove the listener
-    return () => mediaQuery.removeEventListener(setMQuery);
+    return () => mediaQuery.removeEventListener('change', setMQuery);
   }, []);
 
   useEffect(() => {
