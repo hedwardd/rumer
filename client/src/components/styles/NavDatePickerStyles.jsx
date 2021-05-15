@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as SearchIcon } from '../../icons/search.svg';
+import layoutSize from './layoutSize';
 
 const StyledNavDatePicker = styled.div`
   display: flex;
@@ -13,14 +14,14 @@ const SearchButton = styled.div`
   background-color: #FF385C;
   border-radius: 50%;
   color: #FFFFFF;
-  width: 32px;
-  height: 32px;
-  margin-left: 5px;
+  width: ${layoutSize[6]};
+  height: ${layoutSize[6]};
+  margin-left: ${layoutSize[2]};
 `;
 
 const StyledSearchIcon = styled(SearchIcon)`
-  width: 12px;
-  height: 12px;
+  width: ${layoutSize[4]};
+  height: ${layoutSize[4]};
   color: white;
 `;
 

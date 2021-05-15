@@ -1,5 +1,7 @@
 import styled from 'styled-components';
+
 import device from './device';
+import layoutSize from './layoutSize';
 
 const StyledListingBrowser = styled.div`
   margin: 0px 5%;
@@ -36,9 +38,13 @@ const ListingContainer = styled.div`
 `;
 
 const StyledLink = styled.a`
-  padding: 1vw;
+  margin: ${layoutSize[2]} ${layoutSize[1]};
   text-decoration: none;
   color: black;
+
+  @media ${device.tablet} {
+    margin: 0 ${layoutSize[3]};
+  }
 `;
 
 export {
