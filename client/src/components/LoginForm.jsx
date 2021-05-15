@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import {
-  StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink,
+  StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink, StyledInput,
 } from './styles/AuthFormStyles';
 
 // NICE-TO-HAVE: If user is already logged in, this page should not render
@@ -46,7 +46,7 @@ export default function LoginForm({ loginHandler }) {
         <StyledLabel>
           Username
         </StyledLabel>
-        <input
+        <StyledInput
           type="text"
           id="username"
           name="username"
@@ -59,7 +59,7 @@ export default function LoginForm({ loginHandler }) {
         <StyledLabel>
           Password
         </StyledLabel>
-        <input
+        <StyledInput
           type="password"
           name="password"
           onChange={(event) => setPassword(event.target.value)}

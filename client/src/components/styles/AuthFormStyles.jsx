@@ -30,6 +30,13 @@ const StyledLabel = styled.label`
   padding-top: 9px;
 `;
 
+const StyledInput = styled.input`
+  padding: 12px;
+  border-radius: 8px;
+  border: rgb(176 176 176) solid 1px;
+  font-size: 14px;
+`;
+
 const StyledButton = styled.button`
   background-color: #008489;
   border-style: none;
@@ -50,5 +57,5 @@ const StyledLink = styled.a`
 `;
 
 export {
-  StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink,
+  StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink, StyledInput,
 };
