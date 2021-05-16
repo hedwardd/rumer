@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import {
-  StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink,
+  StyledAuthForm, StyledFormSection, StyledLabel, StyledButton, StyledLink, StyledInput,
 } from './styles/AuthFormStyles';
 
 export default function SignupForm() {
@@ -41,7 +41,7 @@ export default function SignupForm() {
         <StyledLabel>
           Username
         </StyledLabel>
-        <input
+        <StyledInput
           type="text"
           id="username"
           name="username"
@@ -54,7 +54,7 @@ export default function SignupForm() {
         <StyledLabel>
           Password
         </StyledLabel>
-        <input
+        <StyledInput
           type="password"
           name="password"
           onChange={(event) => setPassword(event.target.value)}
@@ -66,7 +66,7 @@ export default function SignupForm() {
         <StyledButton
           as="input"
           type="submit"
-          value="Log in"
+          value="Sign up"
         />
       </StyledFormSection>
 

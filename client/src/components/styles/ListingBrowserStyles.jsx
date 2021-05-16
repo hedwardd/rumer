@@ -4,9 +4,9 @@ import device from './device';
 import layoutSize from './layoutSize';
 
 const StyledListingBrowser = styled.div`
-  margin: 0px 5%;
+  margin: ${layoutSize[9]} ${layoutSize[5]};
   @media ${device.laptop} {
-    margin: 0px 10%;
+    margin: ${layoutSize[10]} ${layoutSize[10]};
   }
 `;
 

@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 
+import layoutSize from './layoutSize';
+import fontSize from './fontSize';
+
 const StyledAuthForm = styled.form`
   margin-left: auto;
   margin-right: auto;
@@ -19,25 +22,22 @@ const StyledFormSection = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-left: 8px;
-  padding-right: 8px;
-  margin-bottom: 24px;
+  margin-bottom: ${layoutSize[4]};
 `;
 
 const StyledLabel = styled.label`
-  margin-bottom: 4px;
-  padding-bottom: 8px;
-  padding-top: 9px;
+  margin: ${layoutSize[2]} ${layoutSize[1]};
 `;
 
 const StyledInput = styled.input`
-  padding: 12px;
+  padding: ${layoutSize[2]} ${layoutSize[3]};
   border-radius: 8px;
   border: rgb(176 176 176) solid 1px;
-  font-size: 14px;
+  font-size: ${fontSize[1]};
 `;
 
 const StyledButton = styled.button`
+  margin: ${layoutSize[4]} 0;
   background-color: #008489;
   border-style: none;
   border-radius: 4px;
@@ -45,7 +45,7 @@ const StyledButton = styled.button`
   color: #FFFFFF;
   cursor: pointer;
   font-family: Montserrat, sans-serif;
-  font-size: 16px;
+  font-size: ${fontSize[4]};
   font-weight: 800;
   line-height: 24px;
   padding: 10px 22px;

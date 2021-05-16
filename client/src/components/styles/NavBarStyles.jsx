@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import device from './device';
+import layoutSize from './layoutSize';
 
 const StyledNavBar = styled.nav`
   position: fixed;
   top: 0px;
   left: 0px;
   width: 100%;
-  height: 64px;
+  height: ${layoutSize[8]};
   display: flex;
-  // padding: 0 24px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -18,12 +18,12 @@ const StyledNavBar = styled.nav`
 
   @media ${device.laptop} {
     justify-content: space-between;
-    height: 80px;
+    height: ${layoutSize[9]};
   }
 `;
 
 const StyledNavLink = styled.a`
-  margin: 0 24px;
+  margin: 0 ${layoutSize[5]};
   text-decoration: none;
   color: black;
   display: none;
@@ -31,10 +31,10 @@ const StyledNavLink = styled.a`
   align-items: center;
   text-align: center;
   box-sizing: border-box;
-  min-width: 5vw;
+  min-width: ${layoutSize[8]};
   height: 42px;
   font-size: 14px;
-  padding: 5px 10px;
+  padding: ${layoutSize[1]} ${layoutSize[2]};
   position: relative;
   vertical-align: middle;
   border-radius: 10px;
