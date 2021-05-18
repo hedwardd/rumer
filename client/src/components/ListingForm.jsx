@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactFilestack from 'filestack-react';
 import {
-  StyledListingForm, FormSection, StyledLabel, StyledButton, StyledTextArea,
+  StyledListingForm, FormSection, StyledLabel, StyledButton, StyledTextArea, StyledInput,
 } from './styles/ListingFormStyles';
 
 const FilePickerOptions = {
@@ -88,7 +88,7 @@ export default function ListingForm() {
           Title
         </StyledLabel>
 
-        <input
+        <StyledInput
           type="text"
           required
           id="title"
@@ -103,7 +103,7 @@ export default function ListingForm() {
         <StyledLabel>
           Address line 1
         </StyledLabel>
-        <input
+        <StyledInput
           type="text"
           required
           id="street1"
@@ -120,7 +120,7 @@ export default function ListingForm() {
           Address line 2
         </StyledLabel>
 
-        <input
+        <StyledInput
           type="text"
           id="street2"
           name="street2"
@@ -136,7 +136,7 @@ export default function ListingForm() {
           City
         </StyledLabel>
 
-        <input
+        <StyledInput
           type="text"
           required
           id="city"
@@ -153,7 +153,7 @@ export default function ListingForm() {
           State
         </StyledLabel>
 
-        <input
+        <StyledInput
           type="text"
           required
           id="state"
@@ -170,7 +170,7 @@ export default function ListingForm() {
           Zip
         </StyledLabel>
 
-        <input
+        <StyledInput
           type="text"
           required
           id="zip"

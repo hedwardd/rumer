@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import device from './device';
+import layoutSize from './layoutSize';
+import fontSize from './fontSize';
 
 const StyledListingForm = styled.form`
   margin-left: auto;
@@ -29,9 +31,14 @@ const FormSection = styled.div`
 `;
 
 const StyledLabel = styled.label`
-  margin-bottom: 4px;
-  padding-bottom: 9px;
-  padding-top: 9px;
+  margin: ${layoutSize[2]} ${layoutSize[1]};
+`;
+
+const StyledInput = styled.input`
+  padding: ${layoutSize[2]} ${layoutSize[3]};
+  border-radius: 8px;
+  border: rgb(176 176 176) solid 1px;
+  font-size: ${fontSize[1]};
 `;
 
 const StyledButton = styled.button`
@@ -51,8 +58,12 @@ const StyledButton = styled.button`
 
 const StyledTextArea = styled.textarea`
   resize: none;
+  padding: ${layoutSize[2]} ${layoutSize[3]};
+  border-radius: 8px;
+  border: rgb(176 176 176) solid 1px;
+  font-size: ${fontSize[1]};
 `;
 
 export {
-  StyledListingForm, FormSection, StyledLabel, StyledButton, StyledTextArea,
+  StyledListingForm, FormSection, StyledLabel, StyledButton, StyledTextArea, StyledInput,
 };
