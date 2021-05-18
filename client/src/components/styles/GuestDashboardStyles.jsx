@@ -18,7 +18,7 @@ const StyledTab = styled.button`
   border: none;
   padding: 16px;
   margin: 4px;
-  text-align: center
+  text-align: center;
   font-size: 14px;
   line-height: 18px;
   @media ${device.tablet} {
@@ -84,6 +84,10 @@ const StyledListItem = styled.li`
   }
 `;
 
+const EmptyStateText = styled.p`
+  margin: 20px;
+`;
+
 const StyledImage = styled.img`
   height: 70%;
   margin: 0px;
@@ -107,6 +111,7 @@ export {
   StyledContainer,
   StyledList,
   StyledListItem,
+  EmptyStateText,
   StyledDetailsSection,
   StyledDateRange,
 };

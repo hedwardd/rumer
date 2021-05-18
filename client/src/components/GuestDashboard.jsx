@@ -8,6 +8,7 @@ import {
   StyledContainer,
   StyledList,
   StyledListItem,
+  EmptyStateText,
   StyledDetailsSection,
   StyledDateRange,
 } from './styles/GuestDashboardStyles';
@@ -60,7 +61,7 @@ const ReservationsList = ({ bookings }) => (bookings.length ? (
       </StyledListItem>
     ))}
   </StyledList>
-) : 'No reservations to show.');
+) : <EmptyStateText>No reservations to show.</EmptyStateText>);
 
 export default function GuestDashboard({ user }) {
   const [isLoading, setIsLoading] = useState(false);
