@@ -43,10 +43,10 @@ const StyledLink = styled.a`
   background-color: white;
   z-index: 1;
   @media ${device.mobileM} {
-    font-size: 12px;
+    font-size: 11px;
   }
   @media ${device.mobileL} {
-    font-size: 14px;
+    font-size: 12px;
   }
 `;
 
