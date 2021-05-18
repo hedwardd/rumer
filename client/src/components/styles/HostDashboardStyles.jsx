@@ -15,7 +15,7 @@ const StyledTab = styled.button`
   border: none;
   padding: 16px;
   margin: 4px;
-  text-align: center
+  text-align: center;
   font-size: 14px;
   line-height: 18px;
   @media ${device.tablet} {
@@ -63,6 +63,9 @@ const StyledBookingList = styled.ul`
     flex-direction: row;
     flex-wrap: wrap;
   }
+  @media ${device.laptop} {
+    justify-content: flex-start;
+  }
 `;
 
 const StyledBookingItem = styled.li`
@@ -77,6 +80,10 @@ const StyledBookingItem = styled.li`
   @media ${device.desktop} {
     width: 300px;
   }
+`;
+
+const EmptyStateText = styled.p`
+  margin: 20px;
 `;
 
 const StyledBookingImage = styled.img`
@@ -123,6 +130,7 @@ export {
   StyledContainer,
   StyledBookingList,
   StyledBookingItem,
+  EmptyStateText,
   StyledBookingImage,
   StyledBookingDetailsSection,
   StyledDateRange,

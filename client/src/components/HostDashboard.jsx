@@ -9,6 +9,7 @@ import {
   StyledContainer,
   StyledBookingList,
   StyledBookingItem,
+  EmptyStateText,
   StyledBookingImage,
   StyledBookingDetailsSection,
   StyledDateRange,
@@ -42,10 +43,10 @@ const toggleIsListingArchived = async (listingId) => {
   return responseObject;
 };
 
-const BookingsList = ({ bookings }) => (bookings.length ? (
+const BookingsList = ({ bookings }) => (
   <StyledBookingList>
-    {bookings
-      .map((eachBooking) => (
+    {bookings.length
+      ? bookings.map((eachBooking) => (
         <StyledBookingItem key={eachBooking._id}>
           <StyledBookingImage
             src={eachBooking.listingInfo.photoURLs[0]}
@@ -65,9 +66,9 @@ const BookingsList = ({ bookings }) => (bookings.length ? (
             </p>
           </StyledBookingDetailsSection>
         </StyledBookingItem>
-      ))}
+      )) : <EmptyStateText>No bookings to show.</EmptyStateText>}
   </StyledBookingList>
-) : 'No bookings to show.');
+);
 
 const ListingsList = ({ listings, handleArchiveButton }) => (listings.length ? (
   <ul>
@@ -90,7 +91,7 @@ const ListingsList = ({ listings, handleArchiveButton }) => (listings.length ? (
       </StyledListingItem>
     ))}
   </ul>
-) : 'No bookings to show.');
+) : <EmptyStateText>You haven&apos;t added any listings yet.</EmptyStateText>);
 
 export default function HostDashboard({ user }) {
   const history = useHistory();
