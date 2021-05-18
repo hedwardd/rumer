@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import device from './device';
+import layoutSize from './layoutSize';
 
 const StyledDropDown = styled.div`
   display: none;
-  margin: 0 24px;
+  margin: 0 ${layoutSize[5]};
   @media ${device.laptop} {
     display: block;
   }
@@ -14,16 +15,16 @@ const DropDownButton = styled.button`
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  min-width: 5vw;
+  min-width: ${layoutSize[8]};
   height: 42px;
   text-decoration: none;
   font-size: 14px;
-  padding: 5px 10px;
+  padding: ${layoutSize[1]} ${layoutSize[4]};
   border-radius: 10px;
   background-color: white;
   border: 1px solid #DDDDDD;
   border-radius: 21px;
-  box-shadow: ${({ isOpen }) => (isOpen ? 'rgba(0, 0, 0, 0.18) 0 2px 4px;' : 'none')}
+  box-shadow: ${({ isOpen }) => (isOpen ? 'rgba(0, 0, 0, 0.18) 0 2px 4px;' : 'none')};
   transition: box-shadow .2s;
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.18) 0 2px 4px;
@@ -33,8 +34,8 @@ const DropDownButton = styled.button`
 const DropDownContainer = styled.div`
   position: absolute;
   box-sizing: border-box;
-  top: 4vw;
-  right: 1vw;
+  top: ${layoutSize[8]};
+  right: ${layoutSize[2]};
   background-color: white;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);

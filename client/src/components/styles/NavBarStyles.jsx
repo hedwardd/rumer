@@ -34,7 +34,7 @@ const StyledNavLink = styled.a`
   min-width: ${layoutSize[8]};
   height: 42px;
   font-size: 14px;
-  padding: ${layoutSize[1]} ${layoutSize[2]};
+  padding: ${layoutSize[1]} ${layoutSize[4]};
   position: relative;
   vertical-align: middle;
   border-radius: 10px;
