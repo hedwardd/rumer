@@ -9,6 +9,7 @@ import {
   StyledImageGallery,
   DetailsSection,
   DescriptionWrapper,
+  DescriptionText,
   BookingFormWrapper,
 } from './styles/ListingFullViewStyles';
 
@@ -50,7 +51,7 @@ export default function ListingFullView({ user }) {
       <DetailsSection>
 
         <DescriptionWrapper>
-          <p>{listing.description}</p>
+          <DescriptionText>{listing.description}</DescriptionText>
         </DescriptionWrapper>
 
         <BookingFormWrapper>

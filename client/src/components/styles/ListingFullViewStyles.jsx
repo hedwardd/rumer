@@ -41,6 +41,10 @@ const DescriptionWrapper = styled.div`
   }
 `;
 
+const DescriptionText = styled.p`
+  line-height: 28px;
+`;
+
 const BookingFormWrapper = styled.div`
   min-width: 336px;
   margin-bottom: 300px;
@@ -57,5 +61,6 @@ export {
   StyledImageGallery,
   DetailsSection,
   DescriptionWrapper,
+  DescriptionText,
   BookingFormWrapper,
 };
