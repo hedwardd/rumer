@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledBookingForm = styled.form`
+const StyledBookingForm = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,7 +15,7 @@ const StyledBookingForm = styled.form`
   quotes: auto;
 `;
 
-const FormContentWrapper = styled.div`
+const FormContentWrapper = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;

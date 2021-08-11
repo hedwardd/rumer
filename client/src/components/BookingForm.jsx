@@ -108,10 +108,10 @@ export default function BookingForm({ user, listingId }) {
 
   return (
 
-    <StyledBookingForm onSubmit={(e) => handleSubmit(e)}>
+    <StyledBookingForm>
 
       { bookedDates ? (
-        <FormContentWrapper>
+        <FormContentWrapper onSubmit={(e) => handleSubmit(e)}>
           <DateRangePicker
             required
             startDate={dates.checkIn} // momentPropTypes.momentObj or null,
@@ -137,9 +137,14 @@ export default function BookingForm({ user, listingId }) {
 
       ) : null }
 
-      <p>{isSubmitting ? 'Submitting...' : ''}</p>
-
-      <p>{message.length ? message : ''}</p>
+      {
+      // eslint-disable-next-line no-nested-ternary
+      isSubmitting
+        ? <p>Submitting...</p>
+        : message.length
+          ? <p>{message}</p>
+          : null
+          }
 
     </StyledBookingForm>
 
