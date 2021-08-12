@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import ImageGallery from 'react-image-gallery';
 import device from './device';
 
 const StyledListingFullView = styled.div`
