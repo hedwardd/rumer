@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import device from './device';
+import layoutSize from './layoutSize';
 
 const StyledListingFullView = styled.div`
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 0 ${layoutSize[5]};
   display: flex;
   flex-direction: column;
+  
+  @media ${device.laptop} {
+    padding: ${layoutSize[1]} ${layoutSize[9]};
+  }
 `;
 
 const TitleSection = styled.section`
