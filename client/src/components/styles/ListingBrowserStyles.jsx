@@ -2,11 +2,12 @@ import styled from 'styled-components';
 
 import device from './device';
 import layoutSize from './layoutSize';
+import fontSize from './fontSize';
 
 const StyledListingBrowser = styled.div`
-  margin: ${layoutSize[9]} ${layoutSize[5]};
+  padding: 0 ${layoutSize[5]};
   @media ${device.laptop} {
-    margin: ${layoutSize[10]} ${layoutSize[10]};
+    padding: ${layoutSize[1]} ${layoutSize[9]};
   }
 `;
 
@@ -41,6 +42,8 @@ const StyledLink = styled.a`
   margin: ${layoutSize[2]} ${layoutSize[1]};
   text-decoration: none;
   color: black;
+  font-size: ${fontSize[4]};
+  line-height: ${fontSize[6]};
 
   @media ${device.tablet} {
     margin: 0 ${layoutSize[3]};

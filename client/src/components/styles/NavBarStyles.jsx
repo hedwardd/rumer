@@ -3,6 +3,7 @@ import device from './device';
 import layoutSize from './layoutSize';
 
 const StyledNavBar = styled.nav`
+  box-sizing: border-box;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -17,13 +18,14 @@ const StyledNavBar = styled.nav`
   box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 12px;
 
   @media ${device.laptop} {
+    padding: 0 ${layoutSize[9]};
     justify-content: space-between;
     height: ${layoutSize[9]};
   }
 `;
 
 const StyledNavLink = styled.a`
-  margin: 0 ${layoutSize[5]};
+  /* margin: 0 ${layoutSize[5]}; */
   text-decoration: none;
   color: black;
   display: none;
