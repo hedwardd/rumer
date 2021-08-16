@@ -2,7 +2,10 @@ import styled from 'styled-components';
 import device from './device';
 
 const StyledHostDashboard = styled.div`
-  padding: 0px 10px;
+  padding: 0px 24px;
+  display: flex;
+  flex-direction: column;
+  
   @media ${device.laptop} {
     padding: 0px 80px;
   }
