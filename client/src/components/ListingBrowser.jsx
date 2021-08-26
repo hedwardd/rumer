@@ -5,12 +5,13 @@ import {
   StyledListingBrowser, ImageSection, StyledList, StyledListItem, ListingContainer, StyledLink,
 } from './styles/ListingBrowserStyles';
 
-const getListings = async (checkIn, checkOut) => {
+const getListings = async (checkIn, checkOut, signal) => {
   const listingURL = (checkIn && checkOut)
     ? `/api/listings?checkIn=${checkIn}&checkOut=${checkOut}`
     : '/api/listings';
 
   const response = await fetch(listingURL, {
+    signal,
     credentials: 'include',
     headers: {
       Accept: 'application/json',
@@ -35,13 +36,23 @@ export default function ListingBrowser() {
 
   const [listings, setListings] = useState([]);
   useEffect(() => {
+    let controller = new AbortController();
     async function fetchListingsData() {
-      setIsLoading(true);
-      const listingsData = await getListings(checkInParam, checkOutParam);
-      setIsLoading(false);
-      if (listingsData) setListings(listingsData);
+      try {
+        setIsLoading(true);
+        const listingsData = await getListings(checkInParam, checkOutParam, controller.signal);
+        setIsLoading(false);
+        controller = null;
+        if (listingsData) setListings(listingsData);
+      } catch (error) {
+        console.log(error);
+      }
     }
     fetchListingsData();
+
+    return () => {
+      controller?.abort();
+    };
   }, [checkInParam, checkOutParam]);
 
   return (

@@ -6,8 +6,9 @@ import {
   StyledBookingForm, FormContentWrapper, ReserveButton,
 } from './styles/BookingFormStyles';
 
-const getBookedDates = async (listingId) => {
+const getBookedDates = async (listingId, signal) => {
   const response = await fetch(`/api/bookings/${listingId}`, {
+    signal,
     credentials: 'include',
     headers: {
       Accept: 'application/json',
@@ -69,11 +70,19 @@ export default function BookingForm({ user, listingId }) {
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
     async function fetchBookedDates() {
-      const fetchResult = await getBookedDates(listingId);
-      if (fetchResult) setBookedDates(fetchResult);
+      try {
+        const fetchResult = await getBookedDates(listingId, controller.signal);
+        if (fetchResult) setBookedDates(fetchResult);
+      } catch (error) {
+        console.log(error);
+      }
     }
-    if (!bookedDates && listingId) fetchBookedDates();
+    fetchBookedDates();
+    return () => {
+      controller?.abort();
+    };
   }, [user, listingId, bookedDates]);
 
   const isDayBlocked = (thisDay) => {

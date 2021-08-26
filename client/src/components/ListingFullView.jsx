@@ -19,13 +19,22 @@ export default function ListingFullView({ user }) {
   const { listingId } = useParams();
 
   useEffect(() => {
-    // Get the listings and store them in state
+    let controller = new AbortController();
     async function fetchData() {
-      const res = await fetch(`/api/listings/${listingId}`);
-      const listingData = await res.json();
-      setListing({ ...listingData });
+      try {
+        const res = await fetch(`/api/listings/${listingId}`, { signal: controller.signal });
+        const listingData = await res.json();
+        setListing({ ...listingData });
+        controller = null;
+      } catch (err) {
+        console.log(err);
+      }
     }
     fetchData();
+
+    return () => {
+      controller?.abort();
+    };
   }, [listingId]);
 
   const hasDataLoaded = Object.keys(listing).length !== 0;
