@@ -27,7 +27,7 @@ const StyledMainSection = styled.div`
 `;
 
 const _checkIfLoggedIn = async () => {
-  const response = await fetch('api/auth', {
+  const response = await fetch('/api/auth', {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -51,6 +51,7 @@ const _handleLogout = async () => {
 export default function AppRouter() {
   const [checkedAuth, setCheckedAuth] = useState(false);
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     async function attemptUserAuth() {
       const authResult = await _checkIfLoggedIn();
