@@ -83,7 +83,7 @@ export default function BookingForm({ user, listingId }) {
     return () => {
       controller?.abort();
     };
-  }, [user, listingId, bookedDates]);
+  }, [user, listingId]);
 
   const isDayBlocked = (thisDay) => {
     const dateOfThisDay = thisDay._d;
