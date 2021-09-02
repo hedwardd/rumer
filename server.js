@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 require('dotenv').config();
 const mongoose = require('mongoose');
-const app = require('./app/index');
+const app = require('./app');
 
 const dbOptions = {
   useNewUrlParser: true,
