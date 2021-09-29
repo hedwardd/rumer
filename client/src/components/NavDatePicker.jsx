@@ -40,6 +40,7 @@ export default function NavDatePicker() {
         to={(checkInParam && checkOutParam)
           ? `/browse?checkIn=${checkInParam}&checkOut=${checkOutParam}`
           : '/browse'}
+        aria-label="Search listings by date"
       >
         <StyledSearchIcon />
       </SearchButton>
