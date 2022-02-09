@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO_URI,
   (err) => {
     if (err) console.error(`Database error: ${err}`);
     else {
-      const port = process.env.PORT || 5000;
+      const port = process.env.PORT || 8000;
       app.listen(port);
 
       console.log(`App listening on ${port}`);
